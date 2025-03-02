@@ -73,12 +73,11 @@ export class BaseLaBaG implements LaBaG {
   }
 
   NowMode(): ModeNames {
-    //現在模式
-    // entries 回傳 [string, Mode][]  find([key, value] => 條件) 回傳符合條件的
+    // 查找當前模式
     const mode = Object.entries(Modes).find(
       ([_, mode]: [ModeNames, Mode]) => mode.InMode
     );
-    return mode ? mode[0] : "Normal";
+    return mode ? mode[0] : "Normal"; // 如果没有找到，返回默认值
   }
 
   Reset() {
@@ -182,19 +181,21 @@ export class BaseLaBaG implements LaBaG {
         break;
     }
   }
-  Logic(): void {// 邏輯流程
+  Logic(): void {
+    // 邏輯流程
     this.Reset();
-    while(this.GameRunning()){
-        this.ModeToScreen = false;
-        this.OneData = {};
-        
-        this.MarginScore = 0;
+    while (this.GameRunning()) {
+      this.ModeToScreen = false;
+      this.OneData = {};
 
-        this.Random();
-        this.CalculateScore();
-        this.Result();
-        this.JudgeMode();
-    }}
+      this.MarginScore = 0;
+
+      this.Random();
+      this.CalculateScore();
+      this.Result();
+      this.JudgeMode();
+    }
+  }
 }
 
 const Game: BaseLaBaG = new BaseLaBaG();

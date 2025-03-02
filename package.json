@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/fanyuuu2006/LaBaG-TypeScript/issues"
   },
-  "homepage": "https://github.com/fanyuuu2006/LaBaG-TypeScript#readme"
+  "homepage": "https://github.com/fanyuuu2006/LaBaG-TypeScript#readme",
+  "devDependencies": {
+    "typescript": "^5.8.2"
+  }
 }
