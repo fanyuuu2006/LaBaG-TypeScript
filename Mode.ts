@@ -1,7 +1,7 @@
 import { LaBaG } from "./LaBaG";
 import { RandInt } from "./RandInt";
 
-type Mode = {
+export type Mode = {
   InMode: boolean;
   Rate?: number;
   Times?: number;
@@ -36,7 +36,7 @@ const SuperHHH: Mode = {
     if (this.InMode) {
       this.Times -= 1;
 
-      if (Game.Ps.every((p) => p.Code === "B")) {
+      if (Game.Ps.every((p) => p?.Code === "B")) {
         this.Times += 2;
       }
       if (this.Times <= 0) {
@@ -45,7 +45,7 @@ const SuperHHH: Mode = {
         Game.ModeToScreen = true;
       }
     } else {
-      if (this.RandNum <= this.Rate && Game.Ps.some((p) => p.Code === "B")) {
+      if (this.RandNum <= this.Rate && Game.Ps.some((p) => p?.Code === "B")) {
         this.InMode = true;
         this.Times += 6;
         Game.ModeToScreen = true;
@@ -53,7 +53,7 @@ const SuperHHH: Mode = {
           PiKaChu.InMode = false;
         }
         // 超級阿禾加倍
-        if (Game.Ps.every((p) => p.Code === "B")) {
+        if (Game.Ps.every((p) => p?.Code === "B")) {
           this.Score = Math.round((Game.Score * Game.ScoreTime) / 2);
           Game.MarginScore += this.Score;
         }
@@ -83,15 +83,17 @@ const GreenWei: Mode = {
     }
     // 累積咖波累積數
     Game.Ps.forEach((p) => {
-      if (p.Code === "A" && this.Score < 20) {
-        this.Score += 1;
+      if (this.Score) {
+        if (p?.Code === "A" && this.Score < 20) {
+          this.Score += 1;
+        }
       }
     });
 
     if (this.InMode) {
       this.Times -= 1;
 
-      if (Game.Ps.every((p) => p.Code === "A")) {
+      if (Game.Ps.every((p) => p?.Code === "A")) {
         this.Times += 1;
       }
       if (this.Times <= 0) {
@@ -100,13 +102,14 @@ const GreenWei: Mode = {
         Game.ModeToScreen = true;
       }
     } else {
-      if (this.RandNum <= this.Rate && Game.Ps.every((p) => p.Code === "A")) {
+      if (this.RandNum <= this.Rate && Game.Ps.every((p) => p?.Code === "A")) {
         this.InMode = true;
         this.Times += 2;
         Game.ModeToScreen = true;
         if (PiKaChu.InMode) {
           PiKaChu.InMode = false;
-        } else if (this.Score >= 20) { // 咖波累積數達到 20
+        } else if (this.Score >= 20) {
+          // 咖波累積數達到 20
           this.InMode = true;
           this.Times += 2;
           this.Score = 0;
@@ -128,7 +131,7 @@ const PiKaChu: Mode = {
       // 關掉其他模式
       SuperHHH.InMode = false;
       GreenWei.InMode = false;
-      if (Game.Ps.some((p) => p.Code === "E")) {
+      if (Game.Ps.some((p) => p?.Code === "E")) {
         this.InMode = true;
         Game.Played -= 5;
         this.Times += 1;
@@ -140,5 +143,5 @@ const PiKaChu: Mode = {
   },
 };
 
-export const Modes = {SuperHHH, GreenWei, PiKaChu};
+export const Modes: Record<string, Mode> = { SuperHHH, GreenWei, PiKaChu };
 export type ModeNames = keyof typeof Modes | "Normal";
