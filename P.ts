@@ -1,6 +1,6 @@
-type Mode = "Normal" | "SuperHHH" | "GreenWei" | "PiKaChu";
+import { ModeNames } from "./Mode";
 
-export const DefaultRates: Record<Mode, number> = {
+export const DefaultRates: Record<ModeNames, number> = {
   Normal: 0,
   SuperHHH: 0,
   GreenWei: 0,
@@ -12,12 +12,12 @@ export class P {
   static Obj: Record<string, P> = {};
 
   Code: string | null;
-  Scores: number[];
-  Rates: Record<Mode, number>;
+  Scores: [number, number ,number];
+  Rates: Record<ModeNames, number>;
   constructor(
     Code: string | null = null,
-    Scores: number[] = [0, 0, 0],
-    Rates: Record<Mode, number> = DefaultRates
+    Scores: [number, number ,number] = [0, 0, 0],
+    Rates: Record<ModeNames, number> = {...DefaultRates}
   ) {
     this.Code = Code;
     this.Scores = Scores;
