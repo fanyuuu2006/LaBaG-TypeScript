@@ -83,10 +83,8 @@ const GreenWei: Mode = {
     }
     // 累積咖波累積數
     Game.Ps.forEach((p) => {
-      if (this.Score) {
-        if (p?.Code === "A" && this.Score < 20) {
-          this.Score += 1;
-        }
+      if (p?.Code === "A" && this.Score < 20) {
+        this.Score += 1;
       }
     });
 

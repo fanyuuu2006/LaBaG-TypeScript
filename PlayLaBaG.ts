@@ -20,7 +20,6 @@ export class PlayLaBaG extends BaseLaBaG {
     console.log(`機率區間: ${this.RateRanges[this.NowMode()]}`);
     console.log(`超級阿禾隨機數為: ${Modes.SuperHHH.RandNum}`);
     console.log(`綠光阿瑋隨機數為: ${Modes.GreenWei.RandNum}`);
-    console.log(`咖波累積數：${Modes.GreenWei.Score}`);
   }
 
   CalculateScore(): void {
@@ -41,6 +40,7 @@ export class PlayLaBaG extends BaseLaBaG {
 
   JudgeMode(): void {
     super.JudgeMode();
+    console.log(`咖波累積數：${Modes.GreenWei.Score}`);
     const mode: ModeNames = this.NowMode();
     switch (mode) {
       case "SuperHHH":
