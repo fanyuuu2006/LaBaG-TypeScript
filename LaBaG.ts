@@ -67,6 +67,8 @@ export class BaseLaBaG implements LaBaG {
 
   ModeToScreen: boolean = false;
 
+  constructor(){}
+
   GameRunning(): boolean {
     //遊戲進行
     return this.Times > this.Played;
@@ -164,8 +166,8 @@ export class BaseLaBaG implements LaBaG {
       Modes.PiKaChu.Judge(this);
     }
 
-    const Mode: ModeNames = this.NowMode();
-    switch (Mode) {
+    const mode: ModeNames = this.NowMode();
+    switch (mode) {
       case "Normal":
       case "PiKaChu":
         Modes.SuperHHH.Judge(this);
@@ -197,7 +199,3 @@ export class BaseLaBaG implements LaBaG {
     }
   }
 }
-
-const Game: BaseLaBaG = new BaseLaBaG();
-Game.Logic();
-console.log(Game.Score);
