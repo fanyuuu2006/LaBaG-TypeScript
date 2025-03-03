@@ -121,7 +121,7 @@ const PiKaChu: Mode = {
   InMode: false,
   Times: 0,
   Judge(Game: LaBaG) {
-    if (!Game.GameRunning() && this.Times) {
+    if (!Game.GameRunning() && this.Times !== undefined) {
       // 關掉其他模式
       SuperHHH.InMode = false;
       GreenWei.InMode = false;
