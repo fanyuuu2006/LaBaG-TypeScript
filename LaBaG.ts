@@ -67,7 +67,7 @@ export class BaseLaBaG implements LaBaG {
 
   ModeToScreen: boolean = false;
 
-  constructor(){}
+  constructor() {}
 
   GameRunning(): boolean {
     //遊戲進行
@@ -107,9 +107,15 @@ export class BaseLaBaG implements LaBaG {
       RandInt()
     ) as [number, number, number];
 
+    RandNums.forEach((RandNum: number, index: number) => {
+      this.OneData[`RandNums[${index}]`] = RandNum;
+    });
+
     Object.values(Modes).forEach((mode: Mode) => {
       mode.Random?.();
     });
+    this.OneData["SuperHHH"] = Modes.SuperHHH.RandNum as number;
+    this.OneData["GreenWei"] = Modes.GreenWei.RandNum as number;
 
     let RateRange: number[] = this.RateRanges[this.NowMode()];
     let PCodes: string[] = Object.keys(P.Obj);
@@ -117,6 +123,15 @@ export class BaseLaBaG implements LaBaG {
       const code = PCodes.find((_, j: number) => RandNum <= RateRange[j]);
       if (code) {
         this.Ps[i] = P.Obj[code];
+      }
+    });
+
+    // 累積咖波累積數
+    this.Ps.forEach((p) => {
+      if (Modes.GreenWei.Score !== undefined) {
+        if (p?.Code === "A" && Modes.GreenWei.Score < 20) {
+          Modes.GreenWei.Score += 1;
+        }
       }
     });
   }

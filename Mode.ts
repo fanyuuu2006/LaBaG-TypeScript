@@ -81,12 +81,6 @@ const GreenWei: Mode = {
     ) {
       return;
     }
-    // 累積咖波累積數
-    Game.Ps.forEach((p) => {
-      if (p?.Code === "A" && this.Score < 20) {
-        this.Score += 1;
-      }
-    });
 
     if (this.InMode) {
       this.Times -= 1;
@@ -106,16 +100,18 @@ const GreenWei: Mode = {
         Game.ModeToScreen = true;
         if (PiKaChu.InMode) {
           PiKaChu.InMode = false;
-        } else if (this.Score >= 20) {
-          // 咖波累積數達到 20
-          this.InMode = true;
-          this.Times += 2;
-          this.Score = 0;
-          Game.ModeToScreen = true;
-          if (PiKaChu.InMode) {
-            PiKaChu.InMode = false;
-          }
         }
+        return;
+      } else if (this.Score >= 20) {
+        // 咖波累積數達到 20
+        this.InMode = true;
+        this.Times += 2;
+        this.Score = 0;
+        Game.ModeToScreen = true;
+        if (PiKaChu.InMode) {
+          PiKaChu.InMode = false;
+        }
+        return;
       }
     }
   },
