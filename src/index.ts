@@ -1,4 +1,4 @@
-import { LaBaG } from "./types/LaBaG";
+import { LaBaG, OneDataType, AllDataType } from "./types/LaBaG";
 import { Mode, ModeNames } from "./types/Mode";
 import { RandInt } from "./utils/RandInt";
 import { PlayLaBaG } from "./types/PlayLaBaG";
@@ -179,4 +179,17 @@ const Modes: Record<Exclude<ModeNames, "Normal">, Mode> = {
   },
 };
 
-export { LaBaG, PlayLaBaG, JsonLaBaG, Modes, ModeNames, P, PData, PDatas };
+export {
+  OneDataType,
+  AllDataType,
+  LaBaG,
+  PlayLaBaG,
+  JsonLaBaG,
+
+  Modes,
+  ModeNames,
+  
+  P,
+  PData,
+  PDatas,
+};

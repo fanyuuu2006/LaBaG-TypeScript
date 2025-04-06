@@ -23,8 +23,7 @@ export class JsonLaBaG extends BaseLaBaG {
   Random(): void {
     const currData = this.jsonData[`${this.dataIndex}`];
     if (!currData) {
-      super.Random();
-      return;
+      throw new Error("No data found for the current index");
     }
 
     try {
