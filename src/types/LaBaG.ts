@@ -1,6 +1,7 @@
-import { P } from "./P";
-import { Mode, Modes, ModeNames } from "./Mode";
-import { RandInt } from "./RandInt";
+import { P } from "@/types/P";
+import { Mode, ModeNames } from "@/types/Mode";
+import { RandInt } from "../utils/RandInt";
+import { Modes } from "..";
 
 export interface LaBaG {
   AllData: Record<string, Record<string, number>>;
@@ -44,16 +45,19 @@ export class BaseLaBaG implements LaBaG {
 
   Ps: [P | null, P | null, P | null] = [null, null, null];
 
-  RateRanges: Record<ModeNames, number[]> = (
-    ["Normal", "SuperHHH", "GreenWei", "PiKaChu"] as const
-  ).reduce((Ranges: Record<ModeNames, number[]>, mode: ModeNames) => {
-    let res: number[] = [];
+  RateRanges: Record<ModeNames, number[]> = [
+    "Normal",
+    "SuperHHH",
+    "GreenWei",
+    "PiKaChu",
+  ].reduce((Ranges: Record<ModeNames, number[]>, mode: string) => {
+    const res: number[] = [];
     let accRate: number = 0;
     for (const p of Object.values(P.Obj)) {
-      accRate += p.Rates[mode];
+      accRate += p.Rates[mode as ModeNames];
       res.push(accRate);
     }
-    Ranges[mode] = res;
+    Ranges[mode as ModeNames] = res;
     return Ranges;
   }, {} as Record<ModeNames, number[]>);
 
@@ -77,9 +81,9 @@ export class BaseLaBaG implements LaBaG {
   NowMode(): ModeNames {
     // 查找當前模式
     const mode = Object.entries(Modes).find(
-      ([_, mode]: [ModeNames, Mode]) => mode.InMode
+      ([_, mode]: [string, Mode]) => mode.InMode ?? false
     );
-    return mode ? mode[0] : "Normal"; // 如果没有找到，返回默认值
+    return mode ? (mode[0] as ModeNames) : "Normal";
   }
 
   Reset() {
@@ -103,7 +107,7 @@ export class BaseLaBaG implements LaBaG {
   }
 
   Random(): void {
-    let RandNums: [number, number, number] = Array.from({ length: 3 }, () =>
+    const RandNums: [number, number, number] = Array.from({ length: 3 }, () =>
       RandInt()
     ) as [number, number, number];
 
@@ -117,8 +121,8 @@ export class BaseLaBaG implements LaBaG {
     this.OneData["SuperHHH"] = Modes.SuperHHH.RandNum as number;
     this.OneData["GreenWei"] = Modes.GreenWei.RandNum as number;
 
-    let RateRange: number[] = this.RateRanges[this.NowMode()];
-    let PCodes: string[] = Object.keys(P.Obj);
+    const RateRange: number[] = this.RateRanges[this.NowMode()];
+    const PCodes: string[] = Object.keys(P.Obj);
     RandNums.forEach((RandNum: number, i: number) => {
       const code = PCodes.find((_, j: number) => RandNum <= RateRange[j]);
       if (code) {
@@ -146,15 +150,15 @@ export class BaseLaBaG implements LaBaG {
         if (this.Ps[0]?.Code === this.Ps[1]?.Code) {
           this.MarginScore += this.Ps[0]?.Scores?.[1] as number;
           this.MarginScore += this.Ps[2]?.Scores?.[2] as number;
-          this.MarginScore = Math.round(this.MarginScore / 1.3);
+          this.MarginScore = Math.round(this.MarginScore / 1.4);
         } else if (this.Ps[1]?.Code === this.Ps[2]?.Code) {
           this.MarginScore += this.Ps[1]?.Scores?.[1] as number;
           this.MarginScore += this.Ps[0]?.Scores?.[2] as number;
-          this.MarginScore = Math.round(this.MarginScore / 1.3);
+          this.MarginScore = Math.round(this.MarginScore / 1.4);
         } else if (this.Ps[2]?.Code === this.Ps[0]?.Code) {
           this.MarginScore += this.Ps[2]?.Scores?.[1] as number;
           this.MarginScore += this.Ps[1]?.Scores?.[2] as number;
-          this.MarginScore = Math.round(this.MarginScore / 1.3);
+          this.MarginScore = Math.round(this.MarginScore / 1.4);
         }
         break;
       case 3: // 三個不一樣
@@ -178,23 +182,24 @@ export class BaseLaBaG implements LaBaG {
   }
   JudgeMode(): void {
     if (!this.GameRunning()) {
-      Modes.PiKaChu.Judge(this);
+      Modes.PiKaChu.Judge?.(this);
+      return;
     }
 
     const mode: ModeNames = this.NowMode();
     switch (mode) {
       case "Normal":
       case "PiKaChu":
-        Modes.SuperHHH.Judge(this);
+        Modes.SuperHHH.Judge?.(this);
         if (!Modes.SuperHHH.InMode) {
-          Modes.GreenWei.Judge(this);
+          Modes.GreenWei.Judge?.(this);
         }
         break;
       case "SuperHHH":
-        Modes.SuperHHH.Judge(this);
+        Modes.SuperHHH.Judge?.(this);
         break;
       case "GreenWei":
-        Modes.GreenWei.Judge(this);
+        Modes.GreenWei.Judge?.(this);
         break;
     }
   }

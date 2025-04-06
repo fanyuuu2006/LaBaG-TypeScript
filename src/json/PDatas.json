@@ -1,0 +1,38 @@
+{
+  "Gss": {
+    "name": "咖波",
+    "code": "A",
+    "rates": { "Normal": 36, "SuperHHH": 19, "GreenWei": 36, "PiKaChu": 36 },
+    "scores": [800, 400, 180]
+  },
+  "Hhh": {
+    "name": "阿禾",
+    "code": "B",
+    "rates": { "Normal": 24, "SuperHHH": 5, "GreenWei": 24, "PiKaChu": 24 },
+    "scores": [1500, 800, 300]
+  },
+  "Hentai": {
+    "name": "猥褻男",
+    "code": "C",
+    "rates": { "Normal": 17, "SuperHHH": 19, "GreenWei": 17, "PiKaChu": 17 },
+    "scores": [2500, 1200, 500]
+  },
+  "Handsun": {
+    "name": "文傑",
+    "code": "D",
+    "rates": { "Normal": 12, "SuperHHH": 19, "GreenWei": 12, "PiKaChu": 12 },
+    "scores": [2900, 1450, 690]
+  },
+  "Kachu": {
+    "name": "皮卡丘",
+    "code": "E",
+    "rates": { "Normal": 8, "SuperHHH": 19, "GreenWei": 8, "PiKaChu": 8 },
+    "scores": [12000, 8000, 1250]
+  },
+  "Rrr": {
+    "name": "館長",
+    "code": "F",
+    "rates": { "Normal": 3, "SuperHHH": 19, "GreenWei": 3, "PiKaChu": 3 },
+    "scores": [20000, 12000, 2500]
+  }
+}
