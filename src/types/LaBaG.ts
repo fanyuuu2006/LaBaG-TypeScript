@@ -1,5 +1,5 @@
-import { P } from "@/types/P";
-import { Mode, ModeNames } from "@/types/Mode";
+import { P } from "../types/P";
+import { Mode, ModeNames } from "../types/Mode";
 import { RandInt } from "../utils/RandInt";
 import { Modes } from "..";
 
