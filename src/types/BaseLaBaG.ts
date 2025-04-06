@@ -2,7 +2,7 @@ import { Modes } from "..";
 import { AllDataType, LaBaG, OneDataType } from "./LaBaG";
 import { Mode, ModeNames } from "./Mode";
 import { P } from "./P";
-import { RandInt } from "src/utils/RandInt";
+import { RandInt } from "../utils/RandInt";
 
 export class BaseLaBaG implements LaBaG {
   AllData: AllDataType = {};
