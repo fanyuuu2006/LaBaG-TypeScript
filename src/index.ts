@@ -94,7 +94,7 @@ const Modes: Record<Exclude<ModeNames, "Normal">, Mode> = {
           // 超級阿禾加倍
           if (Game.Ps.every((p) => p?.code === "B")) {
             this.Score = Math.round((Game.Score * Game.ScoreTime) / 2);
-            Game.MarginScore += this.Score;
+            Game.Score += this.Score;
           }
         }
       }
