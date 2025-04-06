@@ -21,7 +21,7 @@ export class JsonLaBaG extends BaseLaBaG {
   }
 
   Random(): void {
-    const currData = this.jsonData[this.dataIndex];
+    const currData = this.jsonData[`${this.dataIndex}`];
     if (!currData) {
       super.Random();
       return;

@@ -1,9 +1,15 @@
 import { P } from "../types/P";
 import { ModeNames } from "../types/Mode";
 
+export type OneDataType = Partial<
+  Record<"SuperHHH" | "GreenWei" | `RandNum[${0 | 1 | 2}]`, number>
+>;
+
+export type AllDataType = Record<`${number}`, OneDataType>;
+
 export interface LaBaG {
-  AllData: Record<string, Record<string, number>>;
-  OneData: Record<string, number>;
+  AllData: AllDataType;
+  OneData: OneDataType;
   DataIndex: number;
 
   Times: number;
