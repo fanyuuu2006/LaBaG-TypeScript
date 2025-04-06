@@ -38,19 +38,19 @@ export class JsonLaBaG extends BaseLaBaG {
       Modes.GreenWei.RandNum = currData["GreenWei"] ?? 0;
 
       const RateRange = this.RateRanges[this.NowMode()];
-      const PCodes = Object.keys(P.Obj);
+      const PCodes = Object.keys(P.Map);
 
       RandNums.forEach((RandNum, i) => {
         const code = PCodes.find((_, j) => RandNum <= RateRange[j]);
         if (code) {
-          this.Ps[i] = P.Obj[code];
+          this.Ps[i] = P.Map.get(code) ?? null;
         }
       });
 
       // 累積 GreenWei 分數
       this.Ps.forEach((p) => {
         if (
-          p?.Code === "A" &&
+          p?.code === "A" &&
           Modes.GreenWei.Score !== undefined &&
           Modes.GreenWei.Score < 20
         ) {

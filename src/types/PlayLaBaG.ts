@@ -25,7 +25,7 @@ export class PlayLaBaG extends BaseLaBaG {
     super.Result();
     console.log("");
     console.log(
-      `| ${this.Ps[0]?.Code} | ${this.Ps[1]?.Code} | ${this.Ps[2]?.Code} |`
+      `| ${this.Ps[0]?.code} | ${this.Ps[1]?.code} | ${this.Ps[2]?.code} |`
     );
     console.log(`+ ${this.MarginScore}`);
     console.log(`目前分數: ${this.Score}`);
@@ -43,7 +43,7 @@ export class PlayLaBaG extends BaseLaBaG {
             console.log(`(超級阿禾加倍分: ${Modes.SuperHHH.Score})`);
           }
         } else {
-          if (this.Ps.every((p) => p?.Code === "B")) {
+          if (this.Ps.every((p) => p?.code === "B")) {
             console.log("全阿禾，次數不消耗且+1！");
           }
         }
@@ -53,7 +53,7 @@ export class PlayLaBaG extends BaseLaBaG {
         if (this.ModeToScreen) {
           console.log("綠光阿瑋出現");
         } else {
-          if (this.Ps.every((p) => p?.Code === "A")) {
+          if (this.Ps.every((p) => p?.code === "A")) {
             console.log("全咖波，次數不消耗！");
           }
         }

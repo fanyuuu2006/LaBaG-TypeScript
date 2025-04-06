@@ -53,7 +53,7 @@ export class BaseLaBaG implements LaBaG {
   ].reduce((Ranges: Record<ModeNames, number[]>, mode: string) => {
     const res: number[] = [];
     let accRate: number = 0;
-    for (const p of Object.values(P.Obj)) {
+    for (const p of Object.values(P.Map)) {
       accRate += p.Rates[mode as ModeNames];
       res.push(accRate);
     }
@@ -122,18 +122,18 @@ export class BaseLaBaG implements LaBaG {
     this.OneData["GreenWei"] = Modes.GreenWei.RandNum as number;
 
     const RateRange: number[] = this.RateRanges[this.NowMode()];
-    const PCodes: string[] = Object.keys(P.Obj);
+    const PCodes = Object.keys(P.Map);
     RandNums.forEach((RandNum: number, i: number) => {
       const code = PCodes.find((_, j: number) => RandNum <= RateRange[j]);
       if (code) {
-        this.Ps[i] = P.Obj[code];
+        this.Ps[i] = P.Map.get(code) ?? null;
       }
     });
 
     // 累積咖波累積數
     this.Ps.forEach((p) => {
       if (Modes.GreenWei.Score !== undefined) {
-        if (p?.Code === "A" && Modes.GreenWei.Score < 20) {
+        if (p?.code === "A" && Modes.GreenWei.Score < 20) {
           Modes.GreenWei.Score += 1;
         }
       }
@@ -141,30 +141,30 @@ export class BaseLaBaG implements LaBaG {
   }
   CalculateScore(): void {
     //計算分數
-    const UniqueCount: number = new Set(this.Ps.map((p) => p?.Code)).size;
+    const UniqueCount: number = new Set(this.Ps.map((p) => p?.code)).size;
     switch (UniqueCount) {
       case 1: // 三個一樣
-        this.MarginScore += this.Ps[0]?.Scores?.[0] as number;
+        this.MarginScore += this.Ps[0]?.scores?.[0] as number;
         break;
       case 2: // 兩個一樣
-        if (this.Ps[0]?.Code === this.Ps[1]?.Code) {
-          this.MarginScore += this.Ps[0]?.Scores?.[1] as number;
-          this.MarginScore += this.Ps[2]?.Scores?.[2] as number;
+        if (this.Ps[0]?.code === this.Ps[1]?.code) {
+          this.MarginScore += this.Ps[0]?.scores?.[1] as number;
+          this.MarginScore += this.Ps[2]?.scores?.[2] as number;
           this.MarginScore = Math.round(this.MarginScore / 1.4);
-        } else if (this.Ps[1]?.Code === this.Ps[2]?.Code) {
-          this.MarginScore += this.Ps[1]?.Scores?.[1] as number;
-          this.MarginScore += this.Ps[0]?.Scores?.[2] as number;
+        } else if (this.Ps[1]?.code === this.Ps[2]?.code) {
+          this.MarginScore += this.Ps[1]?.scores?.[1] as number;
+          this.MarginScore += this.Ps[0]?.scores?.[2] as number;
           this.MarginScore = Math.round(this.MarginScore / 1.4);
-        } else if (this.Ps[2]?.Code === this.Ps[0]?.Code) {
-          this.MarginScore += this.Ps[2]?.Scores?.[1] as number;
-          this.MarginScore += this.Ps[1]?.Scores?.[2] as number;
+        } else if (this.Ps[2]?.code === this.Ps[0]?.code) {
+          this.MarginScore += this.Ps[2]?.scores?.[1] as number;
+          this.MarginScore += this.Ps[1]?.scores?.[2] as number;
           this.MarginScore = Math.round(this.MarginScore / 1.4);
         }
         break;
       case 3: // 三個不一樣
-        this.MarginScore += this.Ps[0]?.Scores?.[2] as number;
-        this.MarginScore += this.Ps[1]?.Scores?.[2] as number;
-        this.MarginScore += this.Ps[2]?.Scores?.[2] as number;
+        this.MarginScore += this.Ps[0]?.scores?.[2] as number;
+        this.MarginScore += this.Ps[1]?.scores?.[2] as number;
+        this.MarginScore += this.Ps[2]?.scores?.[2] as number;
         this.MarginScore = Math.round(this.MarginScore / 3);
         break;
     }

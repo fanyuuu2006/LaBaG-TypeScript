@@ -1,34 +1,40 @@
 import { ModeNames } from "./Mode";
 
-export type PData = {
+// 定義 ModeRates 類型，方便重用
+type ModeRates = Record<ModeNames, number>;
+
+export interface PData {
   name: string;
   code: string;
-  rates: Record<ModeNames, number>;
+  rates: ModeRates;
   scores: [number, number, number];
-};
+}
 
-export class P {
-  static Obj: Record<string, P> = {};
+export class P implements PData {
+  static Map: Map<string, P> = new Map();
+  name: string;
+  code: string;
+  scores: [number, number, number];
+  rates: ModeRates;
 
-  Code: string | null;
-  Scores: [number, number, number];
-  Rates: Record<ModeNames, number>;
   constructor(
-    Code: string | null = null,
-    Scores: [number, number, number] = [0, 0, 0],
-    Rates: Record<ModeNames, number> = {
+    name = "",
+    code: string,
+    scores: [number, number, number] = [0, 0, 0],
+    rates: ModeRates = {
       Normal: 0,
       SuperHHH: 0,
       GreenWei: 0,
       PiKaChu: 0,
     }
   ) {
-    this.Code = Code;
-    this.Scores = Scores;
-    this.Rates = Rates;
+    this.name = name;
+    this.code = code;
+    this.scores = scores;
+    this.rates = rates;
 
-    if (this.Code && !P.Obj[this.Code]) {
-      P.Obj[this.Code] = this;
+    if (this.code && !P.Map.has(this.code)) {
+      P.Map.set(this.code, this);
     }
   }
 }
