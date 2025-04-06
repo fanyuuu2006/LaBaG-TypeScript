@@ -4,6 +4,7 @@ import { RandInt } from "./utils/RandInt";
 import { PlayLaBaG } from "./types/PlayLaBaG";
 import { JsonLaBaG } from "./types/JsonLaBaG";
 import { P, PData } from "./types/P";
+import { parseScore, verifyScore } from './utils/data';
 
 const PDatas: Record<string, PData> = {
   Gss: {
@@ -188,8 +189,11 @@ export {
 
   Modes,
   ModeNames,
-  
+
   P,
   PData,
   PDatas,
+
+  parseScore,
+  verifyScore,
 };
