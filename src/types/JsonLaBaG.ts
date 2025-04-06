@@ -37,7 +37,7 @@ export class JsonLaBaG extends BaseLaBaG {
       Modes.GreenWei.RandNum = currData["GreenWei"] ?? 0;
 
       const RateRange = this.RateRanges[this.NowMode()];
-      const PCodes = Object.keys(P.Map);
+      const PCodes = Array.from(P.Map.keys());
 
       RandNums.forEach((RandNum, i) => {
         const code = PCodes.find((_, j) => RandNum <= RateRange[j]);
