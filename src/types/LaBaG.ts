@@ -53,8 +53,8 @@ export class BaseLaBaG implements LaBaG {
   ].reduce((Ranges: Record<ModeNames, number[]>, mode: string) => {
     const res: number[] = [];
     let accRate: number = 0;
-    for (const p of Object.values(P.Map)) {
-      accRate += p.Rates[mode as ModeNames];
+    for (const p of P.Map.values()) {
+      accRate += p.rates[mode as ModeNames];
       res.push(accRate);
     }
     Ranges[mode as ModeNames] = res;
