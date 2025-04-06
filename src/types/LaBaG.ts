@@ -33,6 +33,7 @@ export interface LaBaG {
 }
 
 export class BaseLaBaG implements LaBaG {
+  
   AllData: Record<string, Record<string, number>> = {};
   OneData: Record<string, number> = {};
   DataIndex: number = 0;
@@ -122,7 +123,7 @@ export class BaseLaBaG implements LaBaG {
     this.OneData["GreenWei"] = Modes.GreenWei.RandNum as number;
 
     const RateRange: number[] = this.RateRanges[this.NowMode()];
-    const PCodes = Object.keys(P.Map);
+    const PCodes = Array.from(P.Map.keys());
     RandNums.forEach((RandNum: number, i: number) => {
       const code = PCodes.find((_, j: number) => RandNum <= RateRange[j]);
       if (code) {
