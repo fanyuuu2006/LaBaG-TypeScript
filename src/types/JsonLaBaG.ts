@@ -1,23 +1,23 @@
 import { P } from "./P";
-import { Modes } from "..";
+import { AllDataType, Modes } from "..";
 import { BaseLaBaG } from "./BaseLaBaG";
 
 export class JsonLaBaG extends BaseLaBaG {
-  jsonData: BaseLaBaG["AllData"];
+  jsonData: AllDataType;
   dataIndex: number;
   constructor() {
     super();
     this.jsonData = {};
-    this.dataIndex = 0;
+    this.dataIndex = 1;
   }
 
-  SetupData(data: BaseLaBaG["AllData"]): void {
+  SetupData(data: AllDataType): void {
     this.jsonData = data;
   }
 
   Reset(): void {
     super.Reset();
-    this.dataIndex = 0;
+    this.dataIndex = 1;
   }
 
   Random(): void {
