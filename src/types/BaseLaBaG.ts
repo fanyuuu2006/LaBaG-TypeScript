@@ -1,4 +1,4 @@
-import { Modes } from "src";
+import { Modes } from "..";
 import { AllDataType, LaBaG, OneDataType } from "./LaBaG";
 import { Mode, ModeNames } from "./Mode";
 import { P } from "./P";
