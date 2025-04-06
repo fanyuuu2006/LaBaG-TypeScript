@@ -28,9 +28,9 @@ export class JsonLaBaG extends BaseLaBaG {
 
     try {
       const RandNums: [number, number, number] = [
-        currData["RandNum[0]"] ?? 0,
-        currData["RandNum[1]"] ?? 0,
-        currData["RandNum[2]"] ?? 0,
+        currData["RandNums[0]"] ?? 0,
+        currData["RandNums[1]"] ?? 0,
+        currData["RandNums[2]"] ?? 0,
       ];
 
       Modes.SuperHHH.RandNum = currData["SuperHHH"] ?? 0;

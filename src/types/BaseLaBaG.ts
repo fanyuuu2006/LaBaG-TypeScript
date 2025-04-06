@@ -84,7 +84,7 @@ export class BaseLaBaG implements LaBaG {
     ) as [number, number, number];
 
     RandNums.forEach((RandNum: number, index: number) => {
-      this.OneData[`RandNums[${index}]` as keyof OneDataType] = RandNum;
+      this.OneData[`RandNums[${index}]` as `RandNums[${0 | 1 | 2}]`] = RandNum;
     });
 
     Object.values(Modes).forEach((mode: Mode) => {

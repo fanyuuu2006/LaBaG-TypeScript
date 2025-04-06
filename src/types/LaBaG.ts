@@ -2,7 +2,7 @@ import { P } from "../types/P";
 import { ModeNames } from "../types/Mode";
 
 export type OneDataType = Partial<
-  Record<"SuperHHH" | "GreenWei" | `RandNum[${0 | 1 | 2}]`, number>
+  Record<"SuperHHH" | "GreenWei" | `RandNums[${0 | 1 | 2}]`, number>
 >;
 
 export type AllDataType = Record<`${number}`, OneDataType>;
