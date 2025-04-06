@@ -1,5 +1,5 @@
 import { Modes } from "..";
-import { BaseLaBaG } from "./LaBaG";
+import { BaseLaBaG } from "./BaseLaBaG";
 import { ModeNames } from "./Mode";
 
 export class PlayLaBaG extends BaseLaBaG {
