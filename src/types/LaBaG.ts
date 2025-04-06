@@ -109,7 +109,7 @@ export class BaseLaBaG implements LaBaG {
 
   Random(): void {
     const RandNums: [number, number, number] = Array.from({ length: 3 }, () =>
-      RandInt()
+      RandInt(1, 100)
     ) as [number, number, number];
 
     RandNums.forEach((RandNum: number, index: number) => {

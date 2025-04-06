@@ -57,7 +57,7 @@ const Modes: Record<Exclude<ModeNames, "Normal">, Mode> = {
     Score: 0,
     RandNum: 0,
     Random(): void {
-      this.RandNum = RandInt();
+      this.RandNum = RandInt(1, 100);
     },
     Judge(Game: LaBaG): void {
       if (
@@ -107,7 +107,7 @@ const Modes: Record<Exclude<ModeNames, "Normal">, Mode> = {
     Score: 0, // 咖波累積數
     RandNum: 0,
     Random(): void {
-      this.RandNum = RandInt();
+      this.RandNum = RandInt(1, 100);
     },
     Judge(Game: LaBaG): void {
       if (
