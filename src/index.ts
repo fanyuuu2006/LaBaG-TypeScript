@@ -181,8 +181,19 @@ const Modes: Record<Exclude<ModeNames, "Normal">, Mode> = {
 };
 
 export {
+  OneDataType,
+  AllDataType,
+  LaBaG,
+  PlayLaBaG,
+  JsonLaBaG,
+
   Modes,
+  ModeNames,
+
+  P,
+  PData,
   PDatas,
+
   parseScore,
   verifyScore,
 };
