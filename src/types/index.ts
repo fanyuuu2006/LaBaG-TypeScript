@@ -1,3 +1,5 @@
+import { patterns } from "src/pattern";
+
 /**
  * 拉霸遊戲的事件類型。
  */
@@ -18,3 +20,9 @@ export type Pattern = {
   /** 對應的分數陣列 */
   scores: number[];
 };
+
+/**
+ * 圖案名稱的型別。
+ */
+export type PatternName = (typeof patterns)[number]["name"];
+

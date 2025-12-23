@@ -1,98 +1,7 @@
-import { LaBaGEvent, Pattern } from "./types";
+import { Mode } from "./mode";
+import { patterns } from "./pattern";
+import { Pattern, LaBaGEvent, PatternName } from "./types";
 import { randInt } from "./utils/randInt";
-
-/**
- * 定義遊戲中可用的圖案及其分數。
- */
-export const patterns = [
-  {
-    name: "gss",
-    scores: [800, 400, 180],
-  },
-  {
-    name: "hhh",
-    scores: [1500, 800, 300],
-  },
-  {
-    name: "hentai",
-    scores: [2500, 1200, 500],
-  },
-  {
-    name: "handson",
-    scores: [2900, 1450, 690],
-  },
-  {
-    name: "kachu",
-    scores: [12000, 8000, 1250],
-  },
-  {
-    name: "rrr",
-    scores: [20000, 12000, 2500],
-  },
-] as const satisfies readonly Pattern[];
-
-/**
- * 圖案名稱的型別。
- */
-export type PatternName = (typeof patterns)[number]["name"];
-
-/**
- * 代表遊戲的一種模式，包含機率設定和事件監聽器。
- */
-export class Mode {
-  /** 模式是否啟用 */
-  active: boolean;
-  /** 模式名稱 */
-  name: string;
-  /** 各圖案出現的機率 */
-  rates: Record<PatternName, number>;
-  // 預先計算的區間，用於高效查找
-  ranges: { threshold: number; pattern: Pattern }[];
-  /** 事件監聽器 */
-  eventListener: Partial<Record<LaBaGEvent, (game: LaBaG, mode: Mode) => void>>;
-
-  /** 模式專屬的變數儲存空間 */
-  variable: Record<string, any>;
-  /** 機率總和 */
-
-  /**
-   * 建立一個新的模式。
-   * @param active - 是否啟用此模式。
-   * @param name - 模式名稱。
-   * @param rates - 各圖案的機率設定。
-   * @param eventListener - 事件監聽器。
-   */
-  constructor(
-    active: boolean,
-    name: string,
-    rates: Record<PatternName, number>,
-    eventListener?: Partial<
-      Record<LaBaGEvent, (game: LaBaG, mode: Mode) => void>
-    >,
-    variable?: Record<string, any>
-  ) {
-    this.active = active;
-    this.name = name;
-    this.rates = rates;
-    this.eventListener = eventListener ?? {};
-    this.variable = variable ?? {};
-
-    // 預先計算機率區間
-    this.ranges = [];
-    let acc = 0;
-    // 遍歷定義的圖案以確保順序一致
-    for (const pattern of patterns) {
-      const rate = rates[pattern.name];
-      if (rate !== undefined) {
-        acc += rate;
-        this.ranges.push({ threshold: acc, pattern });
-      }
-    }
-    if (acc > 100) {
-      console.warn(`模式 "${name}" 的機率總和超過 100%，請檢查設定。`);
-    }
-  }
-}
 
 /**
  * 拉霸遊戲的主要類別。
@@ -177,12 +86,43 @@ export class LaBaG {
   isRunning() {
     return this.played < this.times;
   }
+
   /**
-   * 取得所有啟用中的模式。
-   * @returns 啟用中的模式陣列。
+   * 取得目前遊戲的相關設定
    */
-  getActiveModes() {
-    return this.modes.filter((m) => m.active);
+  getCurrentConfig() {
+    const activeModes = this.modes.filter((m) => m.active);
+    if (activeModes.length === 0) {
+      console.warn("目前沒有啟用中的模式，無法轉動拉霸機。");
+      return { modes: activeModes, ranges: [] };
+    }
+    // 合併所有啟用中模式的機率設定
+    const combinedRates: Record<PatternName, number> = {
+      gss: 0,
+      hhh: 0,
+      hentai: 0,
+      handson: 0,
+      kachu: 0,
+      rrr: 0,
+    };
+    activeModes.forEach((mode) => {
+      Object.entries(mode.rates).forEach(([patternName, rate]) => {
+        combinedRates[patternName as PatternName] += rate;
+      });
+    });
+
+    // 預先計算合併後的區間
+    const ranges: { threshold: number; pattern: Pattern }[] = [];
+    let acc = 0;
+    for (const pattern of patterns) {
+      const rate = combinedRates[pattern.name];
+      if (rate !== undefined) {
+        acc += rate;
+        ranges.push({ threshold: acc, pattern });
+      }
+    }
+
+    return { modes: activeModes, ranges };
   }
 
   /**
@@ -211,41 +151,15 @@ export class LaBaG {
    * 轉動拉霸機，產生隨機圖案。
    */
   private rollSlots() {
-    const modes = this.getActiveModes();
-    if (modes.length === 0) {
-      console.warn("目前沒有啟用中的模式，無法轉動拉霸機。");
-      return;
-    }
-    // 合併所有啟用中模式的機率設定
-    const combinedRates: Record<PatternName, number> = {
-      gss: 0,
-      hhh: 0,
-      hentai: 0,
-      handson: 0,
-      kachu: 0,
-      rrr: 0,
-    };
-    modes.forEach((mode) => {
-      Object.entries(mode.rates).forEach(([patternName, rate]) => {
-        combinedRates[patternName as PatternName] += rate;
-      });
-    });
-
-    // 預先計算合併後的區間
-    const ranges: { threshold: number; pattern: Pattern }[] = [];
-    let acc = 0;
-    for (const pattern of patterns) {
-      const rate = combinedRates[pattern.name];
-      if (rate !== undefined) {
-        acc += rate;
-        ranges.push({ threshold: acc, pattern });
-      }
-    }
-
-    console.log(ranges);
-
+    const { ranges } = this.getCurrentConfig();
+    const rangesAcc =
+      ranges.length > 0 ? ranges[ranges.length - 1].threshold : 0;
     // 產生 3 個隨機數字
-    const randomNums = [randInt(1, acc), randInt(1, acc), randInt(1, acc)];
+    const randomNums = [
+      randInt(1, rangesAcc),
+      randInt(1, rangesAcc),
+      randInt(1, rangesAcc),
+    ];
 
     randomNums.forEach((num, index) => {
       // 根據預先計算的區間找到對應的圖案

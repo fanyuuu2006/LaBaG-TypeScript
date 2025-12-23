@@ -1,4 +1,5 @@
-import { LaBaG, Mode, patterns } from "./labag";
+import { LaBaG } from "./labag";
+import { Mode } from "./mode";
 import { randInt } from "./utils/randInt";
 
 const labag = new LaBaG();

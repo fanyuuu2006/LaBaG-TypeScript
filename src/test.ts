@@ -1,4 +1,5 @@
 import labag from "./index";
+import { Pattern } from "./types";
 labag.addEventListener("gameStart", (game) => {
   console.log("Game Started!");
   console.log(`Total Rounds: ${game.times}\n`);
@@ -7,9 +8,11 @@ labag.addEventListener("roundStart", (game) => {
   console.log(`--- Round ${game.rounds} Start ---`);
 });
 labag.addEventListener("rollSlots", (game) => {
+  const { modes, ranges } = game.getCurrentConfig();
+  console.log(`Active Modes: ${modes.map((m) => m.name).join(", ")}`);
   console.log(
-    `Active Modes: ${game.getActiveModes()
-      .map((m) => m.name)
+    `Probability Ranges: ${ranges
+      .map((r) => `${r.pattern.name}<=${r.threshold}`)
       .join(", ")}`
   );
 });
@@ -27,5 +30,8 @@ while (labag.isRunning()) {
 console.log("Game Over");
 console.log(`Final Score: ${labag.score}`);
 console.log(
-  `Active Modes at end: ${labag.modes.map((m) => m.name).join(", ")}`
+  `Active Modes at end: ${labag
+    .getCurrentConfig()
+    .modes.map((m) => m.name)
+    .join(", ")}`
 );
