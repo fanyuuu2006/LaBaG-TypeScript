@@ -1,5 +1,4 @@
 import { labag } from "./index";
-import { Pattern } from "./types";
 labag.addEventListener("gameStart", (game) => {
   console.log("Game Started!");
   console.log(`Total Rounds: ${game.times}\n`);

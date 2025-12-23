@@ -4,12 +4,12 @@ import pikachu from "./pikachu";
 import superhhh from "./superhhh";
 
 export const modes = {
-  greenwei,
-  normal,
-  pikachu,
   superhhh,
+  greenwei,
+  pikachu,
+  normal,
 } as const;
 
-export type ModeName = typeof modes[keyof typeof modes]["name"];
+export type ModeName = (typeof modes)[keyof typeof modes]["name"];
 
 export const modeList = Object.values(modes);
