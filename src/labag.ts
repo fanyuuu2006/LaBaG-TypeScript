@@ -53,6 +53,7 @@ export class Mode {
 
   /** 模式專屬的變數儲存空間 */
   variable: Record<string, any>;
+  /** 機率總和 */
 
   /**
    * 建立一個新的模式。
@@ -86,6 +87,11 @@ export class Mode {
         acc += rate;
         this.ranges.push({ threshold: acc, pattern });
       }
+    }
+    if (acc > 100) {
+      console.warn(
+        `模式 "${name}" 的機率總和超過 100%，請檢查設定。`
+      );
     }
   }
 }
