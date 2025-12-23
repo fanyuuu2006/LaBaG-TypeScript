@@ -89,9 +89,7 @@ export class Mode {
       }
     }
     if (acc > 100) {
-      console.warn(
-        `模式 "${name}" 的機率總和超過 100%，請檢查設定。`
-      );
+      console.warn(`模式 "${name}" 的機率總和超過 100%，請檢查設定。`);
     }
   }
 }
@@ -104,6 +102,8 @@ export class LaBaG {
   times: number;
   /** 已遊玩次數 */
   played: number;
+  /** 當前進行的輪次 */
+  rounds: number;
   /** 當前分數 */
   score: number;
   /** 邊際分數 */
@@ -122,6 +122,7 @@ export class LaBaG {
   constructor(times: number = 30) {
     this.times = times;
     this.played = 0;
+    this.rounds = 0;
     this.score = 0;
     this.marginScore = 0;
     this.patterns = [null, null, null];
@@ -176,13 +177,12 @@ export class LaBaG {
   isRunning() {
     return this.played < this.times;
   }
-
   /**
-   * 取得當前啟用的模式。
-   * @returns 當前啟用的模式，如果沒有則返回 undefined。
+   * 取得所有啟用中的模式。
+   * @returns 啟用中的模式陣列。
    */
-  getCurrentMode() {
-    return this.modes.find((mode) => mode.active);
+  getActiveModes() {
+    return this.modes.filter((m) => m.active);
   }
 
   /**
@@ -193,6 +193,7 @@ export class LaBaG {
     this.score = 0;
     this.marginScore = 0;
     this.patterns = [null, null, null];
+    this.rounds = 0;
     this.emit("gameStart");
   }
 
@@ -201,6 +202,7 @@ export class LaBaG {
    */
   private roundStart() {
     this.played += 1;
+    this.rounds += 1;
     this.marginScore = 0;
     this.emit("roundStart");
   }
@@ -209,22 +211,48 @@ export class LaBaG {
    * 轉動拉霸機，產生隨機圖案。
    */
   private rollSlots() {
-    const currentMode = this.getCurrentMode();
-    if (!currentMode) {
-      console.warn("找不到啟用中的模式。");
+    const modes = this.getActiveModes();
+    if (modes.length === 0) {
+      console.warn("目前沒有啟用中的模式，無法轉動拉霸機。");
       return;
     }
+    // 合併所有啟用中模式的機率設定
+    const combinedRates: Record<PatternName, number> = {
+      gss: 0,
+      hhh: 0,
+      hentai: 0,
+      handson: 0,
+      kachu: 0,
+      rrr: 0,
+    };
+    modes.forEach((mode) => {
+      Object.entries(mode.rates).forEach(([patternName, rate]) => {
+        combinedRates[patternName as PatternName] += rate;
+      });
+    });
+
+    // 預先計算合併後的區間
+    const ranges: { threshold: number; pattern: Pattern }[] = [];
+    let acc = 0;
+    for (const pattern of patterns) {
+      const rate = combinedRates[pattern.name];
+      if (rate !== undefined) {
+        acc += rate;
+        ranges.push({ threshold: acc, pattern });
+      }
+    }
+
+    console.log(ranges);
 
     // 產生 3 個隨機數字
-    const randomNums = [randInt(1, 100), randInt(1, 100), randInt(1, 100)];
+    const randomNums = [randInt(1, acc), randInt(1, acc), randInt(1, acc)];
 
     randomNums.forEach((num, index) => {
       // 根據預先計算的區間找到對應的圖案
-      const match = currentMode.ranges.find((r) => num <= r.threshold);
+      const match = ranges.find((r) => num <= r.threshold);
       if (match) {
         this.patterns[index] = match.pattern;
       } else {
-        // 如果機率總和 >= 100 則不應發生，但仍需優雅處理
         this.patterns[index] = null;
       }
     });
