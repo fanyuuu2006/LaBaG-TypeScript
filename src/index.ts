@@ -1,16 +1,20 @@
 import { LaBaG } from "./labag";
-import * as normal from "./modes/normal";
-import * as superhhh from "./modes/superhhh";
-import * as greenwei from "./modes/greenwei";
-import * as pikachu from "./modes/pikachu";
+import { modeList, ModeName } from "./modes";
+import { LaBaGEvent, Pattern, PatternName } from "./types";
 
 const labag = new LaBaG();
-[superhhh, greenwei, pikachu, normal].forEach((mode) => {
-  console.log(mode)
-  if (mode.default.active) {
-    labag.modes.push(mode.default);
+modeList.forEach((mode) => {
+  console.log(mode);
+  if (mode.active) {
+    labag.modes.push(mode);
   } else {
-    labag.addMode(mode.default);
+    labag.addMode(mode);
   }
 });
-export default labag;
+export {
+  labag,
+  type LaBaGEvent,
+  type Pattern,
+  type PatternName,
+  type ModeName,
+};

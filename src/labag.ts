@@ -93,8 +93,7 @@ export class LaBaG {
   getCurrentConfig() {
     const activeModes = this.modes.filter((m) => m.active);
     if (activeModes.length === 0) {
-      console.warn("目前沒有啟用中的模式，無法轉動拉霸機。");
-      return { modes: activeModes, ranges: [] };
+      throw new Error("目前沒有啟用中的模式，無法轉動拉霸機。");
     }
     // 合併所有啟用中模式的機率設定
     const combinedRates: Record<PatternName, number> = {
@@ -180,8 +179,7 @@ export class LaBaG {
   private calculateScore() {
     const [p1, p2, p3] = this.patterns;
     if (!p1 || !p2 || !p3) {
-      console.warn("圖案未正確生成，無法計算分數。");
-      return;
+      throw new Error("圖案未正確生成，無法計算分數。");
     }
     if (p1.name === p2.name && p2.name === p3.name) {
       // 三個圖案相同
@@ -225,8 +223,7 @@ export class LaBaG {
 
   play() {
     if (!this.isRunning()) {
-      console.warn("遊戲次數已達上限，無法繼續遊玩。");
-      return;
+      throw new Error("遊戲次數已達上限，無法繼續遊玩。");
     }
     this.roundStart();
     this.rollSlots();

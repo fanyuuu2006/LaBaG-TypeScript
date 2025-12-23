@@ -5,11 +5,11 @@ import { LaBaGEvent, Pattern, PatternName } from "./types";
 /**
  * 代表遊戲的一種模式，包含機率設定和事件監聽器。
  */
-export class Mode {
+export class Mode<N extends string = string> {
   /** 模式是否啟用 */
   active: boolean;
   /** 模式名稱 */
-  name: string;
+  name: N;
   /** 各圖案出現的機率 */
   rates: Record<PatternName, number>;
   // 預先計算的區間，用於高效查找
@@ -30,7 +30,7 @@ export class Mode {
    */
   constructor(
     active: boolean,
-    name: string,
+    name: N,
     rates: Record<PatternName, number>,
     eventListener?: Partial<
       Record<LaBaGEvent, (game: LaBaG, mode: Mode) => void>
@@ -53,9 +53,6 @@ export class Mode {
         acc += rate;
         this.ranges.push({ threshold: acc, pattern });
       }
-    }
-    if (acc > 100) {
-      console.warn(`模式 "${name}" 的機率總和超過 100%，請檢查設定。`);
     }
   }
 }

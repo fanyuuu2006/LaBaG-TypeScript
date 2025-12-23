@@ -1,4 +1,4 @@
-import labag from "./index";
+import { labag } from "./index";
 import { Pattern } from "./types";
 labag.addEventListener("gameStart", (game) => {
   console.log("Game Started!");
