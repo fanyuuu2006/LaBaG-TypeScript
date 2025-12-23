@@ -1,199 +1,85 @@
-import { LaBaG, OneDataType, AllDataType } from "./types/LaBaG";
-import { Mode, ModeNames } from "./types/Mode";
-import { RandInt } from "./utils/RandInt";
-import { PlayLaBaG } from "./types/PlayLaBaG";
-import { JsonLaBaG } from "./types/JsonLaBaG";
-import { P, PData } from "./types/P";
-import { parseScore, verifyScore } from './utils/data';
+import { LaBaG, Mode } from "./labag";
+import { randInt } from "./utils/randInt";
 
-const PDatas: Record<string, PData> = {
-  Gss: {
-    name: "咖波",
-    code: "A",
-    rates: { Normal: 36, SuperHHH: 19, GreenWei: 36, PiKaChu: 36 },
-    scores: [800, 400, 180],
-  },
-  Hhh: {
-    name: "阿禾",
-    code: "B",
-    rates: { Normal: 24, SuperHHH: 5, GreenWei: 24, PiKaChu: 24 },
-    scores: [1500, 800, 300],
-  },
-  Hentai: {
-    name: "猥褻男",
-    code: "C",
-    rates: { Normal: 17, SuperHHH: 19, GreenWei: 17, PiKaChu: 17 },
-    scores: [2500, 1200, 500],
-  },
-  Handsun: {
-    name: "文傑",
-    code: "D",
-    rates: { Normal: 12, SuperHHH: 19, GreenWei: 12, PiKaChu: 12 },
-    scores: [2900, 1450, 690],
-  },
-  Kachu: {
-    name: "皮卡丘",
-    code: "E",
-    rates: { Normal: 8, SuperHHH: 19, GreenWei: 8, PiKaChu: 8 },
-    scores: [12000, 8000, 1250],
-  },
-  Rrr: {
-    name: "館長",
-    code: "F",
-    rates: { Normal: 3, SuperHHH: 19, GreenWei: 3, PiKaChu: 3 },
-    scores: [20000, 12000, 2500],
-  },
-};
+const labag = new LaBaG();
 
-Object.values(PDatas).forEach((pd: PData) => {
-  new P(pd.name, pd.code, pd.scores, pd.rates);
-});
-
-const Modes: Record<Exclude<ModeNames, "Normal">, Mode> = {
-  // 超級阿禾
-  SuperHHH: {
-    InMode: false,
-    Rate: 15,
-    Times: 0,
-    Score: 0,
-    RandNum: 0,
-    Random(): void {
-      this.RandNum = RandInt(1, 100);
+const modes: ConstructorParameters<typeof Mode>[] = [
+  [
+    true,
+    "normal",
+    {
+      gss: 36,
+      hhh: 24,
+      hentai: 17,
+      handson: 12,
+      kachu: 8,
+      rrr: 3,
     },
-    Judge(Game: LaBaG): void {
-      if (
-        !Game.GameRunning() ||
-        this.RandNum === undefined ||
-        this.Times === undefined ||
-        this.Rate === undefined ||
-        this.Score === undefined
-      ) {
-        return;
-      }
-
-      this.Score = 0; // Reset score
-      if (this.InMode) {
-        this.Times -= 1;
-
-        if (Game.Ps.every((p) => p?.code === "B")) {
-          this.Times += 2;
-        }
-        if (this.Times <= 0) {
-          this.InMode = false;
-          Game.JudgeMode();
-          Game.ModeToScreen = true;
-        }
-      } else {
-        if (this.RandNum <= this.Rate && Game.Ps.some((p) => p?.code === "B")) {
-          this.InMode = true;
-          this.Times += 6;
-          Game.ModeToScreen = true;
-          if (Modes.PiKaChu.InMode) {
-            Modes.PiKaChu.InMode = false;
-          }
-          // 超級阿禾加倍
-          if (Game.Ps.every((p) => p?.code === "B")) {
-            this.Score = Math.round((Game.Score * Game.ScoreTime) / 2);
-            Game.Score += this.Score;
+  ],
+  [
+    false,
+    "superhhh",
+    {
+      gss: 19,
+      hhh: 5,
+      hentai: 19,
+      handson: 19,
+      kachu: 19,
+      rrr: 19,
+    },
+    {
+      roundStart: (_, mode) => {
+        if (!mode.active) return;
+        mode.variable.score = 0;
+        mode.variable.times -= 1;
+      },
+      rollSlots: (game, mode) => {
+        mode.variable.randNum = randInt(1, 100);
+        if (mode.active) {
+          if (
+            game.patterns.every((pattern) => pattern && pattern.name === "hhh")
+          ) {
+            mode.variable.times += 2;
           }
         }
-      }
-    },
-  },
-
-  GreenWei: {
-    InMode: false,
-    Rate: 35,
-    Times: 0,
-    Score: 0, // 咖波累積數
-    RandNum: 0,
-    Random(): void {
-      this.RandNum = RandInt(1, 100);
-    },
-    Judge(Game: LaBaG): void {
-      if (
-        !Game.GameRunning() ||
-        this.RandNum === undefined ||
-        this.Times === undefined ||
-        this.Rate === undefined ||
-        this.Score === undefined
-      ) {
-        return;
-      }
-
-      if (this.InMode) {
-        this.Times -= 1;
-
-        if (Game.Ps.every((p) => p?.code === "A")) {
-          this.Times += 1;
-        }
-        if (this.Times <= 0) {
-          this.InMode = false;
-          Game.JudgeMode();
-          Game.ModeToScreen = true;
-        }
-      } else {
-        if (
-          this.RandNum <= this.Rate &&
-          Game.Ps.every((p) => p?.code === "A")
-        ) {
-          this.InMode = true;
-          this.Times += 2;
-          Game.ModeToScreen = true;
-          if (Modes.PiKaChu.InMode) {
-            Modes.PiKaChu.InMode = false;
+      },
+      roundEnd: (game, mode) => {
+        if (mode.active) {
+          if (mode.variable.times <= 0) {
+            mode.active = false;
           }
-          return;
-        } else if (this.Score >= 20) {
-          // 咖波累積數達到 20
-          this.InMode = true;
-          this.Times += 2;
-          this.Score = 0;
-          Game.ModeToScreen = true;
-          if (Modes.PiKaChu.InMode) {
-            Modes.PiKaChu.InMode = false;
-          }
-          return;
-        }
-      }
-    },
-  },
-
-  PiKaChu: {
-    InMode: false,
-    Times: 0,
-    Judge(Game: LaBaG) {
-      if (!Game.GameRunning() && this.Times !== undefined) {
-        // 關掉其他模式
-        Modes.SuperHHH.InMode = false;
-        Modes.GreenWei.InMode = false;
-        if (Game.Ps.some((p) => p?.code === "E")) {
-          this.InMode = true;
-          Game.Played -= 5;
-          this.Times += 1;
-          Game.ModeToScreen = true;
         } else {
-          this.InMode = false;
+          if (
+            mode.variable.randNum <= mode.variable.rate &&
+            game.patterns.some((pattern) => pattern && pattern.name === "hhh")
+          ) {
+            mode.active = true;
+            mode.variable.times += 6;
+
+            if (
+              game.patterns.every(
+                (pattern) => pattern && pattern.name === "hhh"
+              )
+            ) {
+              mode.variable.score = Math.round(game.score / 2);
+              game.score += mode.variable.score;
+            }
+          }
         }
-      }
+      },
     },
-  },
-};
+    {
+      times: 0,
+      rate: 15,
+      score: 0,
+      randNum: 0,
+    },
+  ],
+];
 
-export {
-  OneDataType,
-  AllDataType,
-  LaBaG,
-  PlayLaBaG,
-  JsonLaBaG,
+for (const modeArgs of modes) {
+  const mode = new Mode(...modeArgs);
+  labag.addMode(mode);
+}
 
-  Modes,
-  ModeNames,
-
-  P,
-  PData,
-  PDatas,
-
-  parseScore,
-  verifyScore,
-};
+export default labag;
