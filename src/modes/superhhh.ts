@@ -25,6 +25,16 @@ export default new Mode(
     rollSlots: (_, mode) => {
       mode.variable.randNum = randInt(1, 100);
     },
+    calculateScore: (game, mode) => {
+      if (mode.active) return;
+      if (
+        game.patterns.every((p) => p?.name === "hhh") &&
+        mode.variable.randNum > mode.variable.rate
+      ) {
+        mode.variable.score += Math.round(game.score / 2);
+        game.marginScore = mode.variable.score;
+      }
+    },
     roundEnd: (game, mode) => {
       const { patterns } = game;
       const { variable } = mode;
