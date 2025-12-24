@@ -17,13 +17,16 @@ export default new Mode(
       mode.variable.times = 0;
     },
     roundEnd: (game, mode) => {
-      if (
-        !game.isRunning() &&
-        game.patterns.some((p) => p && p.name === "kachu")
-      ) {
+      const { patterns } = game;
+      if (!game.isRunning() && patterns.some((p) => p && p.name === "kachu")) {
         mode.active = true;
         game.played -= 5;
         mode.variable.times += 1;
+        for (let i = 0; i < patterns.length; i++) {
+          if (patterns[i]?.name === 'kachu') {
+            patterns[i] = mode.variable.pattern;
+          }
+        }
       }
     },
   },
