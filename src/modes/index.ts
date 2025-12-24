@@ -8,7 +8,7 @@ export const modes = {
   greenwei,
   pikachu,
   normal,
-} as const;
+}
 
 export type ModeName = (typeof modes)[keyof typeof modes]["name"];
 

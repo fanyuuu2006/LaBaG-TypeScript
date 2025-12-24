@@ -4,12 +4,7 @@ import { LaBaGEvent, Pattern, PatternName } from "./types";
 
 const labag = new LaBaG();
 modeList.forEach((mode) => {
-  console.log(mode);
-  if (mode.active) {
-    labag.modes.push(mode);
-  } else {
     labag.addMode(mode);
-  }
 });
 export {
   labag,

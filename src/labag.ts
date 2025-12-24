@@ -51,7 +51,7 @@ export class LaBaG {
    * @param event - 要觸發的事件名稱。
    */
   private emit(event: LaBaGEvent) {
-    this.eventListeners[event].forEach((fn) => fn(this));
+    [...this.eventListeners[event]].forEach((fn) => fn(this));
   }
 
   /**
@@ -61,6 +61,18 @@ export class LaBaG {
    */
   addEventListener(event: LaBaGEvent, callbackFn: (game: LaBaG) => void) {
     this.eventListeners[event].push(callbackFn);
+  }
+
+  /**
+   * 移除事件監聽器。
+   * @param event - 事件名稱。
+   * @param listener - 監聽器函式。
+   */
+  removeEventListener(event: LaBaGEvent, callbackFn: (game: LaBaG) => void) {
+    const index = this.eventListeners[event].indexOf(callbackFn);
+    if (index !== -1) {
+      this.eventListeners[event].splice(index, 1);
+    }
   }
 
   /**
