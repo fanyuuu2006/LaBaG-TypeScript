@@ -245,4 +245,8 @@ export class LaBaG {
       this.gameOver();
     }
   }
+
+  getMode(modeName: string): Mode | undefined {
+    return this.modes.find((mode) => mode.name === modeName);
+  }
 }
