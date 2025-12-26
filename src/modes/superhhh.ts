@@ -29,10 +29,10 @@ export default new Mode(
       if (mode.active) return;
       if (
         game.patterns.every((p) => p?.name === "hhh") &&
-        mode.variable.randNum > mode.variable.rate
+        mode.variable.randNum <= mode.variable.rate
       ) {
         mode.variable.score += Math.round(game.score / 2);
-        game.marginScore = mode.variable.score;
+        game.marginScore += mode.variable.score;
       }
     },
     roundEnd: (game, mode) => {

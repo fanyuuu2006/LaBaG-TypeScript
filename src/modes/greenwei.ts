@@ -36,8 +36,12 @@ export default new Mode(
       let gssCount = 0;
       let allGSS = true;
       for (const p of patterns) {
-        if (p?.name === "gss") gssCount++;
-        else allGSS = false;
+        if (p?.name === "gss") {
+          gssCount++;
+          mode.variable.times += 1;
+        } else {
+          allGSS = false;
+        }
       }
 
       variable.count += gssCount;
