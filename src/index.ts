@@ -9,6 +9,7 @@ modeList.forEach((mode) => {
 });
 export {
   labag,
+  modeList,
   LaBaG,
   Mode,
   type LaBaGEvent,
