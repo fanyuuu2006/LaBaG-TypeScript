@@ -16,6 +16,7 @@ export default new Mode(
     gameStart: (_, mode) => {
       mode.active = false;
       mode.variable.times = 0;
+      mode.variable.score = 0;
     },
     roundStart: (_, mode) => {
       if (!mode.active) return;

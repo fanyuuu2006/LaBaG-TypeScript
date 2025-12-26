@@ -16,6 +16,7 @@ export default new Mode(
     gameStart: (_, mode) => {
       mode.active = false;
       mode.variable.times = 0;
+      mode.variable.count = 0;
     },
     roundStart: (_, mode) => {
       if (!mode.active) return;
@@ -43,11 +44,11 @@ export default new Mode(
         }
       }
 
-      variable.count += gssCount;
+        variable.count += gssCount;
 
       if (mode.active) {
-        if (patterns.some((p) => p?.name === "gss")) {
-          variable.times += 1;
+        if (allGSS) {
+          variable.times += 2;
         }
         if (variable.times <= 0) {
           mode.active = false;
