@@ -1,4 +1,4 @@
-import { patterns } from "src/pattern";
+import { patterns } from "../pattern";
 import { Mode } from "../mode";
 import { randInt } from "../utils/randInt";
 

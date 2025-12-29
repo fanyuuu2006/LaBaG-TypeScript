@@ -8,8 +8,8 @@ export const modes = {
   superhhh,
   greenwei,
   normal,
-}
+};
 
-export type ModeName = (typeof modes)[keyof typeof modes]["name"];
+export type ModeName = keyof typeof modes;
 
 export const modeList = Object.values(modes);

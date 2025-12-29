@@ -1,4 +1,4 @@
-import { patterns } from "src/pattern";
+import { patterns } from "../pattern";
 import { Mode } from "../mode";
 
 export default new Mode(

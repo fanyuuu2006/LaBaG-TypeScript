@@ -5,25 +5,22 @@ import { LaBaGEvent, Pattern, PatternName } from "./types";
 /**
  * 代表遊戲的一種模式，包含機率設定和事件監聽器。
  */
-export class Mode<
-  N extends string = string,
-  V extends Record<string, any> = Record<string, any>
-> {
+export class Mode{
   /** 模式是否啟用 */
   active: boolean;
   /** 模式名稱 */
-  name: N;
+  name: string;
   /** 各圖案出現的機率 */
   rates: Record<PatternName, number>;
   // 預先計算的區間，用於高效查找
   ranges: { threshold: number; pattern: Pattern }[];
   /** 事件監聽器 */
   eventListener: Partial<
-    Record<LaBaGEvent, (game: LaBaG, mode: Mode<N, V>) => void>
+    Record<LaBaGEvent, (game: LaBaG, mode: Mode) => void>
   >;
 
   /** 模式專屬的變數儲存空間 */
-  variable: V;
+  variable: Record<string, any>;
   /** 機率總和 */
 
   /**
@@ -35,18 +32,18 @@ export class Mode<
    */
   constructor(
     active: boolean,
-    name: N,
+    name: string,
     rates: Record<PatternName, number>,
     eventListener?: Partial<
-      Record<LaBaGEvent, (game: LaBaG, mode: Mode<N, V>) => void>
+      Record<LaBaGEvent, (game: LaBaG, mode: Mode) => void>
     >,
-    variable?: V
+    variable?: Record<string, any>
   ) {
     this.active = active;
     this.name = name;
     this.rates = rates;
     this.eventListener = eventListener ?? {};
-    this.variable = variable ?? ({} as V);
+    this.variable = variable ?? {};
 
     // 預先計算機率區間
     this.ranges = [];

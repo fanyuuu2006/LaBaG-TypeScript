@@ -1,4 +1,5 @@
 import { Mode } from "./mode";
+import { ModeName } from "./modes";
 import { patterns } from "./pattern";
 import { Pattern, LaBaGEvent, PatternName } from "./types";
 import { randInt } from "./utils/randInt";
@@ -250,7 +251,7 @@ export class LaBaG {
     }
   }
 
-  getMode(modeName: string): Mode | undefined {
+  getMode(modeName: ModeName): Mode | undefined {
     return this.modes.find((mode) => mode.name === modeName);
   }
 }
