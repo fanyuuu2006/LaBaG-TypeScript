@@ -5,7 +5,10 @@ import { LaBaGEvent, Pattern, PatternName } from "./types";
 /**
  * 代表遊戲的一種模式，包含機率設定和事件監聽器。
  */
-export class Mode<N extends string = string> {
+export class Mode<
+  N extends string = string,
+  V extends Record<string, any> = Record<string, any>
+> {
   /** 模式是否啟用 */
   active: boolean;
   /** 模式名稱 */
@@ -15,10 +18,12 @@ export class Mode<N extends string = string> {
   // 預先計算的區間，用於高效查找
   ranges: { threshold: number; pattern: Pattern }[];
   /** 事件監聽器 */
-  eventListener: Partial<Record<LaBaGEvent, (game: LaBaG, mode: Mode) => void>>;
+  eventListener: Partial<
+    Record<LaBaGEvent, (game: LaBaG, mode: Mode<N, V>) => void>
+  >;
 
   /** 模式專屬的變數儲存空間 */
-  variable: Record<string, any>;
+  variable: V;
   /** 機率總和 */
 
   /**
@@ -33,15 +38,15 @@ export class Mode<N extends string = string> {
     name: N,
     rates: Record<PatternName, number>,
     eventListener?: Partial<
-      Record<LaBaGEvent, (game: LaBaG, mode: Mode) => void>
+      Record<LaBaGEvent, (game: LaBaG, mode: Mode<N, V>) => void>
     >,
-    variable?: Record<string, any>
+    variable?: V
   ) {
     this.active = active;
     this.name = name;
     this.rates = rates;
     this.eventListener = eventListener ?? {};
-    this.variable = variable ?? {};
+    this.variable = variable ?? ({} as V);
 
     // 預先計算機率區間
     this.ranges = [];

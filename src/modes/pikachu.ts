@@ -1,3 +1,4 @@
+import { patterns } from "src/pattern";
 import { Mode } from "../mode";
 
 export default new Mode(
@@ -19,7 +20,7 @@ export default new Mode(
     roundEnd: (game, mode) => {
       const { patterns } = game;
       const hasBindPattern = patterns.some(
-        (p) => p && p.name === mode.variable.bindPattern
+        (p) => p && p.name === mode.variable.bindPattern.name
       );
 
       if (!game.isRunning() && hasBindPattern) {
@@ -27,7 +28,7 @@ export default new Mode(
         game.played -= mode.variable.bonusRounds;
         mode.variable.times += 1;
         patterns.forEach((p, i) => {
-          if (p?.name === mode.variable.bindPattern) {
+          if (p?.name === mode.variable.bindPattern.name) {
             patterns[i] = mode.variable.pattern;
           }
         });
@@ -45,7 +46,7 @@ export default new Mode(
       name: "pikachu",
       scores: [12000, 8000, 1250],
     },
-    bindPattern: "kachu",
+    bindPattern: patterns[4],
     bonusRounds: 5,
   }
 );

@@ -1,3 +1,4 @@
+import { patterns } from "src/pattern";
 import { Mode } from "../mode";
 import { randInt } from "../utils/randInt";
 
@@ -39,7 +40,7 @@ export default new Mode(
       let gssCount = 0;
       let allGSS = true;
       for (const p of patterns) {
-        if (p?.name === mode.variable.bindPattern) {
+        if (p?.name === mode.variable.bindPattern.name) {
           gssCount++;
         } else {
           allGSS = false;
@@ -69,7 +70,7 @@ export default new Mode(
         if (activated) {
           mode.active = true;
           for (let i = 0; i < patterns.length; i++) {
-            if (patterns[i]?.name === mode.variable.bindPattern) {
+            if (patterns[i]?.name === mode.variable.bindPattern.name) {
               patterns[i] = variable.pattern;
             }
           }
@@ -87,7 +88,7 @@ export default new Mode(
       scores: [800, 400, 180],
     },
     extendTimes: 2,
-    bindPattern: "gss",
+    bindPattern: patterns[0],
     bonusTimes: 2,
     requiredGssCount: 20,
     mutiplier: 3,

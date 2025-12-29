@@ -1,3 +1,4 @@
+import { patterns } from "src/pattern";
 import { Mode } from "../mode";
 import { randInt } from "../utils/randInt";
 
@@ -29,7 +30,9 @@ export default new Mode(
     calculateScore: (game, mode) => {
       if (mode.active) return;
       if (
-        game.patterns.every((p) => p?.name === mode.variable.bindPattern) &&
+        game.patterns.every(
+          (p) => p?.name === mode.variable.bindPattern.name
+        ) &&
         mode.variable.randNum <= mode.variable.rate
       ) {
         mode.variable.score += Math.round(game.score / 2);
@@ -43,7 +46,7 @@ export default new Mode(
       let hhhCount = 0;
       let allHHH = true;
       for (const p of patterns) {
-        if (p?.name === mode.variable.bindPattern) hhhCount++;
+        if (p?.name === mode.variable.bindPattern.name) hhhCount++;
         else allHHH = false;
       }
 
@@ -60,7 +63,7 @@ export default new Mode(
           variable.times += variable.bonusTimes;
 
           for (let i = 0; i < patterns.length; i++) {
-            if (patterns[i]?.name === mode.variable.bindPattern) {
+            if (patterns[i]?.name === mode.variable.bindPattern.name) {
               patterns[i] = variable.pattern;
             }
           }
@@ -73,7 +76,7 @@ export default new Mode(
     rate: 15,
     score: 0,
     randNum: 0,
-    bindPattern: "hhh",
+    bindPattern: patterns[1],
     bonusTimes: 6,
     pattern: {
       name: "superhhh",
