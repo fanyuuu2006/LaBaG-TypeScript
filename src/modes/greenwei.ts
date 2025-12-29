@@ -27,7 +27,9 @@ export default new Mode(
     },
     calculateScore: (game, mode) => {
       if (mode.active) {
-        game.marginScore = Math.round(game.marginScore * 3);
+        game.marginScore = Math.round(
+          game.marginScore * mode.variable.mutiplier
+        );
       }
     },
     roundEnd: (game, mode) => {
@@ -88,5 +90,6 @@ export default new Mode(
     bindPattern: "gss",
     bonusTimes: 2,
     requiredGssCount: 20,
+    mutiplier: 3,
   }
 );

@@ -18,18 +18,24 @@ export default new Mode(
     },
     roundEnd: (game, mode) => {
       const { patterns } = game;
-      if (
-        !game.isRunning() &&
-        patterns.some((p) => p && p.name === mode.variable.bindPattern)
-      ) {
+      const hasBindPattern = patterns.some(
+        (p) => p && p.name === mode.variable.bindPattern
+      );
+
+      if (!game.isRunning() && hasBindPattern) {
         mode.active = true;
         game.played -= mode.variable.bonusRounds;
         mode.variable.times += 1;
-        for (let i = 0; i < patterns.length; i++) {
-          if (patterns[i]?.name === mode.variable.bindPattern) {
+        patterns.forEach((p, i) => {
+          if (p?.name === mode.variable.bindPattern) {
             patterns[i] = mode.variable.pattern;
           }
-        }
+        });
+        return;
+      }
+
+      if (mode.active && hasBindPattern) {
+        game.played -= mode.variable.times;
       }
     },
   },
