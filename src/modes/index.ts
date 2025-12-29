@@ -4,9 +4,9 @@ import pikachu from "./pikachu";
 import superhhh from "./superhhh";
 
 export const modes = {
+  pikachu,
   superhhh,
   greenwei,
-  pikachu,
   normal,
 }
 

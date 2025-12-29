@@ -17,6 +17,8 @@ export class LaBaG {
   score: number;
   /** 邊際分數 */
   marginScore: number;
+  /** 產生的隨機數字 */
+  randNums: number[];
   /** 當前轉出的圖案組合 */
   patterns: [Pattern | null, Pattern | null, Pattern | null];
   /** 遊戲模式列表 */
@@ -34,6 +36,7 @@ export class LaBaG {
     this.rounds = 0;
     this.score = 0;
     this.marginScore = 0;
+    this.randNums = [];
     this.patterns = [null, null, null];
     this.modes = [];
     this.eventListeners = {
@@ -143,6 +146,7 @@ export class LaBaG {
     this.played = 0;
     this.score = 0;
     this.marginScore = 0;
+    this.randNums = [];
     this.patterns = [null, null, null];
     this.rounds = 0;
     this.emit("gameStart");
@@ -166,13 +170,13 @@ export class LaBaG {
     const rangesAcc =
       ranges.length > 0 ? ranges[ranges.length - 1].threshold : 0;
     // 產生 3 個隨機數字
-    const randomNums = [
+    this.randNums = [
       randInt(1, rangesAcc),
       randInt(1, rangesAcc),
       randInt(1, rangesAcc),
     ];
 
-    randomNums.forEach((num, index) => {
+    this.randNums.forEach((num, index) => {
       // 根據預先計算的區間找到對應的圖案
       const match = ranges.find((r) => num <= r.threshold);
       if (match) {
