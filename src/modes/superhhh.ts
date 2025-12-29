@@ -29,7 +29,7 @@ export default new Mode(
     calculateScore: (game, mode) => {
       if (mode.active) return;
       if (
-        game.patterns.every((p) => p?.name === "hhh") &&
+        game.patterns.every((p) => p?.name === mode.variable.bindPattern) &&
         mode.variable.randNum <= mode.variable.rate
       ) {
         mode.variable.score += Math.round(game.score / 2);
@@ -43,13 +43,13 @@ export default new Mode(
       let hhhCount = 0;
       let allHHH = true;
       for (const p of patterns) {
-        if (p?.name === "hhh") hhhCount++;
+        if (p?.name === mode.variable.bindPattern) hhhCount++;
         else allHHH = false;
       }
 
       if (mode.active) {
         if (allHHH) {
-          variable.times += 2;
+          variable.times += mode.variable.extendTimes;
         }
         if (variable.times <= 0) {
           mode.active = false;
@@ -57,10 +57,10 @@ export default new Mode(
       } else {
         if (variable.randNum <= variable.rate && hhhCount > 0) {
           mode.active = true;
-          variable.times += 6;
+          variable.times += variable.bonusTimes;
 
           for (let i = 0; i < patterns.length; i++) {
-            if (patterns[i]?.name === "hhh") {
+            if (patterns[i]?.name === mode.variable.bindPattern) {
               patterns[i] = variable.pattern;
             }
           }
@@ -73,9 +73,12 @@ export default new Mode(
     rate: 15,
     score: 0,
     randNum: 0,
+    bindPattern: "hhh",
+    bonusTimes: 6,
     pattern: {
       name: "superhhh",
       scores: [1500, 800, 300],
     },
+    extendTimes: 2,
   }
 );
