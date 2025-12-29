@@ -18,12 +18,15 @@ export default new Mode(
     },
     roundEnd: (game, mode) => {
       const { patterns } = game;
-      if (!game.isRunning() && patterns.some((p) => p && p.name === "kachu")) {
+      if (
+        !game.isRunning() &&
+        patterns.some((p) => p && p.name === mode.variable.bindPattern)
+      ) {
         mode.active = true;
-        game.played -= 5;
+        game.played -= mode.variable.bonusRounds;
         mode.variable.times += 1;
         for (let i = 0; i < patterns.length; i++) {
-          if (patterns[i]?.name === 'kachu') {
+          if (patterns[i]?.name === mode.variable.bindPattern) {
             patterns[i] = mode.variable.pattern;
           }
         }
@@ -36,5 +39,7 @@ export default new Mode(
       name: "pikachu",
       scores: [12000, 8000, 1250],
     },
+    bindPattern: "kachu",
+    bonusRounds: 5,
   }
 );

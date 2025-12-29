@@ -37,18 +37,18 @@ export default new Mode(
       let gssCount = 0;
       let allGSS = true;
       for (const p of patterns) {
-        if (p?.name === "gss") {
+        if (p?.name === mode.variable.bindPattern) {
           gssCount++;
         } else {
           allGSS = false;
         }
       }
 
-        variable.count += gssCount;
+      variable.count += gssCount;
 
       if (mode.active) {
         if (allGSS) {
-          variable.times += 2;
+          variable.times += mode.variable.extendTimes;
         }
         if (variable.times <= 0) {
           mode.active = false;
@@ -57,17 +57,17 @@ export default new Mode(
         let activated = false;
         if (variable.randNum <= variable.rate && allGSS) {
           activated = true;
-          variable.times += 2;
-        } else if (variable.count >= 20) {
+          variable.times += mode.variable.extendTimes;
+        } else if (variable.count >= mode.variable.requiredGssCount) {
           activated = true;
-          variable.times += 2;
-          variable.count -= 20;
+          variable.times += mode.variable.bonusTimes;
+          variable.count -= mode.variable.requiredGssCount;
         }
 
         if (activated) {
           mode.active = true;
           for (let i = 0; i < patterns.length; i++) {
-            if (patterns[i]?.name === "gss") {
+            if (patterns[i]?.name === mode.variable.bindPattern) {
               patterns[i] = variable.pattern;
             }
           }
@@ -84,5 +84,9 @@ export default new Mode(
       name: "greenwei",
       scores: [800, 400, 180],
     },
+    extendTimes: 2,
+    bindPattern: "gss",
+    bonusTimes: 2,
+    requiredGssCount: 20,
   }
 );
