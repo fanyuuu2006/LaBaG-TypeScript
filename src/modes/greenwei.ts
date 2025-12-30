@@ -56,23 +56,23 @@ export default new Mode(
         if (variable.times <= 0) {
           mode.active = false;
         }
-      } else {
-        let activated = false;
-        if (variable.randNum <= variable.rate && allGSS) {
-          activated = true;
-          variable.times += mode.variable.extendTimes;
-        } else if (variable.count >= mode.variable.requiredGssCount) {
-          activated = true;
-          variable.times += mode.variable.bonusTimes;
-          variable.count -= mode.variable.requiredGssCount;
-        }
+      }
 
-        if (activated) {
-          mode.active = true;
-          for (let i = 0; i < patterns.length; i++) {
-            if (patterns[i]?.name === mode.variable.bindPattern.name) {
-              patterns[i] = variable.pattern;
-            }
+      let activated = false;
+      if (variable.randNum <= variable.rate && allGSS) {
+        activated = true;
+        variable.times += mode.variable.extendTimes;
+      } else if (variable.count >= mode.variable.requiredBindPatternCount) {
+        activated = true;
+        variable.times += mode.variable.bonusTimes;
+        variable.count -= mode.variable.requiredBindPatternCount;
+      }
+
+      if (activated) {
+        mode.active = true;
+        for (let i = 0; i < patterns.length; i++) {
+          if (patterns[i]?.name === mode.variable.bindPattern.name) {
+            patterns[i] = variable.pattern;
           }
         }
       }
@@ -90,7 +90,7 @@ export default new Mode(
     extendTimes: 2,
     bindPattern: patterns[0],
     bonusTimes: 2,
-    requiredGssCount: 20,
+    requiredBindPatternCount: 20,
     mutiplier: 3,
   }
 );

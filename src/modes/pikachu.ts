@@ -47,6 +47,6 @@ export default new Mode(
       scores: [12000, 8000, 1250],
     },
     bindPattern: patterns[4],
-    bonusRounds: 5,
+    bonusRounds: 3,
   }
 );
