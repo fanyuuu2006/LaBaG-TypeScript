@@ -58,14 +58,15 @@ export default new Mode(
           mode.active = false;
         }
       }
-      
-      if (variable.randNum <= variable.rate && hhhCount > 0) {
-        mode.active = true;
-        variable.times += variable.bonusTimes;
+      if (!mode.active) {
+        if (variable.randNum <= variable.rate && hhhCount > 0) {
+          mode.active = true;
+          variable.times += variable.bonusTimes;
 
-        for (let i = 0; i < patterns.length; i++) {
-          if (patterns[i]?.name === mode.variable.bindPattern.name) {
-            patterns[i] = variable.pattern;
+          for (let i = 0; i < patterns.length; i++) {
+            if (patterns[i]?.name === mode.variable.bindPattern.name) {
+              patterns[i] = variable.pattern;
+            }
           }
         }
       }
