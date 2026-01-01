@@ -2,6 +2,7 @@ import { LaBaG } from "./labag";
 import { modeList, ModeName } from "./modes";
 import { LaBaGEvent, Pattern, PatternName } from "./types";
 import { Mode } from "./mode";
+import { patterns } from "./pattern";
 
 const labag = new LaBaG();
 modeList.forEach((mode) => {
@@ -10,6 +11,7 @@ modeList.forEach((mode) => {
 export {
   labag,
   modeList,
+  patterns,
   LaBaG,
   Mode,
   type LaBaGEvent,
