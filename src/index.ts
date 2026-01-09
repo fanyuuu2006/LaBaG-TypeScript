@@ -19,6 +19,8 @@ export {
   modeList,
   patterns,
   LaBaG,
+  Recorder,
+  RecordChecker,
   Mode,
   type LaBaGEvent,
   type Pattern,

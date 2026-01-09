@@ -36,7 +36,7 @@ export default new Mode(
       }
 
       if (mode.active && hasBindPattern) {
-        game.played -= mode.variable.times;
+        game.played -= Math.max(mode.variable.times, mode.variable.bonusRounds);
       }
     },
   },
