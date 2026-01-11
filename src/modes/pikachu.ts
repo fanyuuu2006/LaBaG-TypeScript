@@ -5,12 +5,12 @@ export default new Mode(
   false,
   "pikachu",
   {
-    gss: 36,
-    hhh: 24,
-    hentai: 17,
-    handson: 12,
-    kachu: 8,
-    rrr: 3,
+    gss: 0,
+    hhh: 0,
+    hentai: 0,
+    handson: 0,
+    kachu: 0,
+    rrr: 0,
   },
   {
     gameStart: (_, mode) => {
@@ -36,7 +36,7 @@ export default new Mode(
       }
 
       if (mode.active && hasBindPattern) {
-        game.played -= Math.max(mode.variable.times, mode.variable.bonusRounds);
+        game.played -= Math.min(mode.variable.times, mode.variable.bonusRounds);
       }
     },
   },

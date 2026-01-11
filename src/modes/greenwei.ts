@@ -6,12 +6,12 @@ export default new Mode(
   false,
   "greenwei",
   {
-    gss: 36,
-    hhh: 24,
-    hentai: 17,
-    handson: 12,
-    kachu: 8,
-    rrr: 3,
+    gss: 0,
+    hhh: 0,
+    hentai: 0,
+    handson: 0,
+    kachu: 0,
+    rrr: 0,
   },
   {
     gameStart: (_, mode) => {
