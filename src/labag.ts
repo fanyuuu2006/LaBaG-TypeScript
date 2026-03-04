@@ -55,7 +55,10 @@ export class LaBaG {
    * @param event - 要觸發的事件名稱。
    */
   private emit(event: LaBaGEvent) {
-    [...this.eventListeners[event]].forEach((fn) => fn(this));
+    const listeners = this.eventListeners[event];
+    for (let i = 0; i < listeners.length; i++) {
+      listeners[i](this);
+    }
   }
 
   /**
@@ -120,11 +123,12 @@ export class LaBaG {
       kachu: 0,
       rrr: 0,
     };
-    activeModes.forEach((mode) => {
-      Object.entries(mode.rates).forEach(([patternName, rate]) => {
-        combinedRates[patternName as PatternName] += rate;
-      });
-    });
+    for (let i = 0; i < activeModes.length; i++) {
+      const mode = activeModes[i];
+      for (const patternName in mode.rates) {
+        combinedRates[patternName as PatternName] += mode.rates[patternName as PatternName];
+      }
+    }
 
     // 預先計算合併後的區間
     const ranges: { threshold: number; pattern: Pattern }[] = [];
@@ -170,22 +174,21 @@ export class LaBaG {
     const { ranges } = this.getCurrentConfig();
     const rangesAcc =
       ranges.length > 0 ? ranges[ranges.length - 1].threshold : 0;
-    // 產生 3 個隨機數字
-    this.randNums = [
-      randInt(1, rangesAcc),
-      randInt(1, rangesAcc),
-      randInt(1, rangesAcc),
-    ];
-
-    this.randNums.forEach((num, index) => {
-      // 根據預先計算的區間找到對應的圖案
-      const match = ranges.find((r) => num <= r.threshold);
-      if (match) {
-        this.patterns[index] = match.pattern;
-      } else {
-        this.patterns[index] = null;
+    
+    // 產生 3 個隨機數字並直接尋找對應圖案
+    for (let i = 0; i < 3; i++) {
+      const num = randInt(1, rangesAcc);
+      this.randNums[i] = num;
+      
+      let matchedPattern: Pattern | null = null;
+      for (let j = 0; j < ranges.length; j++) {
+        if (num <= ranges[j].threshold) {
+          matchedPattern = ranges[j].pattern;
+          break;
+        }
       }
-    });
+      this.patterns[i] = matchedPattern;
+    }
 
     this.emit("rollSlots");
   }
