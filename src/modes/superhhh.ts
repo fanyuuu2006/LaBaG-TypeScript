@@ -6,12 +6,12 @@ export default new Mode(
   false,
   "superhhh",
   {
-    gss: -17, // 36 -> 19
+    gss: -19, // 36 -> 17
     hhh: -19, // 24 -> 5
-    hentai: 2, // 17 -> 19
-    handson: 26, // 12 -> 18
-    kachu: 11, // 8 -> 19
-    rrr: 17, // 3 -> 20
+    hentai: 1, // 17 -> 18
+    handson: 7, // 12 -> 19
+    kachu: 12, // 8 -> 20
+    rrr: 18, // 3 -> 21
   },
   {
     gameStart: (_, mode) => {

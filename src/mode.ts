@@ -1,11 +1,22 @@
 import { LaBaG } from "./labag";
 import { patterns } from "./pattern";
 import { LaBaGEvent, Pattern, PatternName } from "./types";
+interface ModeConfig<VariableType extends Record<string, any>> {
+  active: boolean;
+  name: string;
+  rates: Record<PatternName, number>;
+  eventListener?: Partial<
+    Record<LaBaGEvent, (game: LaBaG, mode: Mode<VariableType>) => void>
+  >;
+  variable?: VariableType;
+}
 
 /**
  * 代表遊戲的一種模式，包含機率設定和事件監聽器。
  */
-export class Mode{
+export class Mode<
+  VariableType extends Record<string, any> = Record<string, any>,
+> implements ModeConfig<VariableType> {
   /** 模式是否啟用 */
   active: boolean;
   /** 模式名稱 */
@@ -16,11 +27,11 @@ export class Mode{
   ranges: { threshold: number; pattern: Pattern }[];
   /** 事件監聽器 */
   eventListener: Partial<
-    Record<LaBaGEvent, (game: LaBaG, mode: Mode) => void>
+    Record<LaBaGEvent, (game: LaBaG, mode: Mode<VariableType>) => void>
   >;
 
   /** 模式專屬的變數儲存空間 */
-  variable: Record<string, any>;
+  variable: VariableType;
   /** 機率總和 */
 
   /**
@@ -35,15 +46,15 @@ export class Mode{
     name: string,
     rates: Record<PatternName, number>,
     eventListener?: Partial<
-      Record<LaBaGEvent, (game: LaBaG, mode: Mode) => void>
+      Record<LaBaGEvent, (game: LaBaG, mode: Mode<VariableType>) => void>
     >,
-    variable?: Record<string, any>
+    variable?: VariableType,
   ) {
     this.active = active;
     this.name = name;
     this.rates = rates;
     this.eventListener = eventListener ?? {};
-    this.variable = variable ?? {};
+    this.variable = variable ?? ({} as VariableType);
 
     // 預先計算機率區間
     this.ranges = [];

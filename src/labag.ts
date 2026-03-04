@@ -23,7 +23,7 @@ export class LaBaG {
   /** 當前轉出的圖案組合 */
   patterns: [Pattern | null, Pattern | null, Pattern | null];
   /** 遊戲模式列表 */
-  modes: Mode[];
+  modes: Mode<any>[];
   /** 事件監聽器列表 */
   eventListeners: Record<LaBaGEvent, ((game: LaBaG) => void)[]>;
 
@@ -83,7 +83,7 @@ export class LaBaG {
    * 新增遊戲模式。
    * @param mode - 要新增的模式。
    */
-  addMode(mode: Mode) {
+  addMode(mode: Mode<any>) {
     this.modes.push(mode);
     // 註冊特定模式的監聽器
     Object.entries(mode.eventListener).forEach(([event, listener]) => {
