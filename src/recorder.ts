@@ -1,13 +1,13 @@
 import { LaBaG } from "./labag";
 
 export type RoundRecord = {
-  randNums: Record<string, number>;
+  readonly randNums: Readonly<Record<string, number>>;
 };
 
 export type GameRecord = {
   times: number;
   score: number;
-  rounds: RoundRecord[];
+  readonly rounds: ReadonlyArray<RoundRecord>;
 };
 
 export type RecorderOptions = {
@@ -17,25 +17,23 @@ export class Recorder {
   private game: LaBaG;
   #rounds: RoundRecord[] = [];
   private score: number = 0;
-  private onRoundEndBound: (e: LaBaG) => void;
   private started = false;
   private debug = false;
 
   constructor(gameInstance: LaBaG, options?: RecorderOptions) {
     this.game = gameInstance;
-    this.onRoundEndBound = this.onRoundEnd.bind(this);
-    this.debug = !!options?.debug;
+    this.debug = options?.debug ?? false;
   }
 
-  get rounds() {
-    return this.#rounds.map((r) => ({ ...r }));
+  get rounds(): ReadonlyArray<RoundRecord> {
+    return this.#rounds;
   }
 
-  private onRoundEnd(g: LaBaG) {
+  private onRoundEnd = (g: LaBaG) => {
     const randNums: Record<string, number> = {};
 
     g.randNums.forEach((value, key) => {
-      if (!isNaN(value)) {
+      if (typeof value === "number" && !Number.isNaN(value)) {
         randNums[key] = value;
       }
     });
@@ -43,7 +41,7 @@ export class Recorder {
     // 收集各模式的 randNum（若為數值且有效）
     g.modes.forEach((mode) => {
       const rn = mode?.variable?.randNum;
-      if (!isNaN(rn)) {
+      if (typeof rn === "number" && !Number.isNaN(rn)) {
         randNums[mode.name] = rn;
       }
     });
@@ -60,7 +58,7 @@ export class Recorder {
 
     this.#rounds.push(round);
     this.score = g.score;
-  }
+  };
 
   init(clearExisting = true) {
     if (this.started) return;
@@ -68,14 +66,14 @@ export class Recorder {
       this.clear();
     }
     if (typeof this.game.addEventListener === "function") {
-      this.game.addEventListener("roundEnd", this.onRoundEndBound);
+      this.game.addEventListener("roundEnd", this.onRoundEnd);
       this.started = true;
     }
   }
 
   dispose() {
     if (!this.started) return;
-    this.game.removeEventListener("roundEnd", this.onRoundEndBound);
+    this.game.removeEventListener("roundEnd", this.onRoundEnd);
     this.started = false;
   }
   clear() {

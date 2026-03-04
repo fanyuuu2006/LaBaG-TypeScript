@@ -24,12 +24,9 @@ export class RecordChecker {
    * @returns 計算出的分數。
    */
   calculateScore(record: GameRecord): number {
-    // 重置遊戲狀態
+    // 警告：此操作會重置並覆蓋當前傳入的遊戲實例狀態
     this.game.init();
     this.game.times = record.times;
-
-    // 使用 any 類型來存取私有方法
-    const gameAny = this.game as any;
 
     for (const round of record.rounds) {
       if (!this.game.isRunning()) {
@@ -37,45 +34,39 @@ export class RecordChecker {
       }
 
       // 1. 回合開始
-      gameAny.roundStart();
+      this.game["roundStart"]();
 
       // 2. 設定隨機數字與圖案 (模擬 rollSlots)
       const { ranges } = this.game.getCurrentConfig();
-      
-      this.game.randNums = [
-        round.randNums["0"],
-        round.randNums["1"],
-        round.randNums["2"],
-      ];
 
-      this.game.randNums.forEach((num, index) => {
+      for (let i = 0; i < 3; i++) {
+        const num = round.randNums?.[i.toString()] ?? 0;
+        this.game.randNums[i] = num;
+
         const match = ranges.find((r) => num <= r.threshold);
-        if (match) {
-          this.game.patterns[index] = match.pattern;
-        } else {
-          this.game.patterns[index] = null;
-        }
-      });
+        this.game.patterns[i] = match ? match.pattern : null;
+      }
 
       // 觸發 rollSlots 事件，讓模式執行其邏輯 (例如 greenwei 產生隨機數)
-      gameAny.emit("rollSlots");
+      this.game["emit"]("rollSlots");
 
       // 3. 覆蓋模式的隨機變數 (確保使用紀錄中的數值)
       this.game.modes.forEach((mode) => {
-        if (round.randNums[mode.name] !== undefined) {
-          mode.variable.randNum = round.randNums[mode.name];
+        const recordedNum = round.randNums?.[mode.name];
+        if (recordedNum !== undefined && mode.variable) {
+          mode.variable.randNum = recordedNum;
         }
       });
 
       // 4. 計算分數
-      gameAny.calculateScore();
+      this.game["calculateScore"]();
 
       // 5. 回合結束
-      gameAny.roundEnd();
+      this.game["roundEnd"]();
     }
 
     if (!this.game.isRunning()) {
-      gameAny.gameOver();
+      this.game["gameOver"]();
     }
 
     return this.game.score;
