@@ -2,10 +2,10 @@ import { patterns } from "../pattern";
 import { Mode } from "../mode";
 import { randInt } from "../utils/randInt";
 
-export default new Mode(
-  false,
-  "greenwei",
-  {
+export default new Mode({
+  active: false,
+  name: "greenwei",
+  rates: {
     gss: 0,
     hhh: 0,
     hentai: 0,
@@ -13,7 +13,7 @@ export default new Mode(
     kachu: 0,
     rrr: 0,
   },
-  {
+  eventListener: {
     gameStart: (_, mode) => {
       mode.active = false;
       mode.variable.times = 0;
@@ -29,7 +29,7 @@ export default new Mode(
     calculateScore: (game, mode) => {
       if (mode.active) {
         game.marginScore = Math.round(
-          game.marginScore * mode.variable.mutiplier
+          game.marginScore * mode.variable.mutiplier,
         );
       }
     },
@@ -79,7 +79,7 @@ export default new Mode(
       }
     },
   },
-  {
+  variable: {
     times: 0,
     rate: 35,
     randNum: 0,
@@ -93,5 +93,5 @@ export default new Mode(
     bonusTimes: 2,
     requiredBindPatternCount: 20,
     mutiplier: 3,
-  }
-);
+  },
+});

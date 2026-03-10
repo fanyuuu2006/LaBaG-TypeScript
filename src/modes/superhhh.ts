@@ -2,10 +2,10 @@ import { patterns } from "../pattern";
 import { Mode } from "../mode";
 import { randInt } from "../utils/randInt";
 
-export default new Mode(
-  false,
-  "superhhh",
-  {
+export default new Mode({
+  active: false,
+  name: "superhhh",
+  rates: {
     gss: -19, // 36 -> 17
     hhh: -19, // 24 -> 5
     hentai: 1, // 17 -> 18
@@ -13,7 +13,7 @@ export default new Mode(
     kachu: 12, // 8 -> 20
     rrr: 18, // 3 -> 21
   },
-  {
+  eventListener: {
     gameStart: (_, mode) => {
       mode.active = false;
       mode.variable.times = 0;
@@ -31,7 +31,7 @@ export default new Mode(
       if (mode.active) return;
       if (
         game.patterns.every(
-          (p) => p?.name === mode.variable.bindPattern.name
+          (p) => p?.name === mode.variable.bindPattern.name,
         ) &&
         mode.variable.randNum <= mode.variable.rate
       ) {
@@ -72,7 +72,7 @@ export default new Mode(
       }
     },
   },
-  {
+  variable: {
     times: 0,
     rate: 15,
     score: 0,
@@ -84,5 +84,5 @@ export default new Mode(
       scores: [1500, 800, 300],
     },
     extendTimes: 2,
-  }
-);
+  },
+});

@@ -25,4 +25,3 @@ export type Pattern = {
  * 圖案名稱的型別。
  */
 export type PatternName = (typeof patterns)[number]["name"];
-

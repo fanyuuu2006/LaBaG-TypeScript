@@ -1,10 +1,10 @@
 import { patterns } from "../pattern";
 import { Mode } from "../mode";
 
-export default new Mode(
-  false,
-  "pikachu",
-  {
+export default new Mode({
+  active: false,
+  name: "pikachu",
+  rates: {
     gss: 0,
     hhh: 0,
     hentai: 0,
@@ -12,7 +12,7 @@ export default new Mode(
     kachu: 0,
     rrr: 0,
   },
-  {
+  eventListener: {
     gameStart: (_, mode) => {
       mode.active = false;
       mode.variable.times = 0;
@@ -20,7 +20,7 @@ export default new Mode(
     roundEnd: (game, mode) => {
       const { patterns } = game;
       const hasBindPattern = patterns.some(
-        (p) => p && p.name === mode.variable.bindPattern.name
+        (p) => p && p.name === mode.variable.bindPattern.name,
       );
 
       if (!game.isRunning() && hasBindPattern) {
@@ -40,7 +40,7 @@ export default new Mode(
       }
     },
   },
-  {
+  variable: {
     times: 0,
     pattern: {
       name: "pikachu",
@@ -48,5 +48,5 @@ export default new Mode(
     },
     bindPattern: patterns[4],
     bonusRounds: 3,
-  }
-);
+  },
+});

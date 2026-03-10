@@ -1,4 +1,4 @@
-import { LaBaG } from "./labag";
+import { LaBaG } from "./labagV2";
 import { patterns } from "./pattern";
 import { LaBaGEvent, Pattern, PatternName } from "./types";
 interface ModeConfig<VariableType extends Record<string, any>> {
@@ -34,22 +34,38 @@ export class Mode<
   variable: VariableType;
   /** 機率總和 */
 
+
   /**
-   * 建立一個新的模式。
-   * @param active - 是否啟用此模式。
-   * @param name - 模式名稱。
-   * @param rates - 各圖案的機率設定。
-   * @param eventListener - 事件監聽器。
+   * 建立一個新的遊戲模式。
+   * @param config 模式的設定，包括啟用狀態、名稱、機率、事件監聽器和專屬變數。
+   * @remarks 會根據提供的機率設定預先計算出對應的區間，以便在遊戲中快速查找圖案。
+   * @example
+   * const myMode = new Mode({
+   *   active: false,
+   *   name: "myMode",
+   *  rates: {
+   *    gss: 10,
+   *   hhh: 20,
+   *   hentai: 30,
+   *   handson: 20,
+   *   kachu: 10,
+   *   rrr: 10,
+   * },
+   *  eventListener: {
+   *   gameStart: (game, mode) => {
+   *    console.log("遊戲開始了！", mode.name);
+   * },
+   *  roundEnd: (game, mode) => {
+   *   console.log("一輪結束了！", mode.name);
+   * },
+   * },
+   * variable: {
+   *  myCustomValue: 123,
+   * },
+   * });  
    */
-  constructor(
-    active: boolean,
-    name: string,
-    rates: Record<PatternName, number>,
-    eventListener?: Partial<
-      Record<LaBaGEvent, (game: LaBaG, mode: Mode<VariableType>) => void>
-    >,
-    variable?: VariableType,
-  ) {
+  constructor(config: ModeConfig<VariableType>) {
+    const { active, name, rates, eventListener, variable } = config;
     this.active = active;
     this.name = name;
     this.rates = rates;
