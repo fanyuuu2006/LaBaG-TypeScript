@@ -22,7 +22,7 @@ labag.addEventListener("roundEnd", (game) => {
 });
 
 labag.init();
-while (labag.isRunning()) {
+while (labag.isRunning) {
   labag.play();
 }
 

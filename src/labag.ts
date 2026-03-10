@@ -273,7 +273,7 @@ export class LaBaG {
     this.emit("roundEnd");
   }
 
-  gameover() {
+  gameOver() {
     this.emit("gameOver");
   }
 
@@ -286,7 +286,7 @@ export class LaBaG {
     this.calculateScore();
     this.roundEnd();
     if (!this.isRunning) {
-      this.gameover();
+      this.gameOver();
     }
   }
 

@@ -29,7 +29,7 @@ export class RecordChecker {
     this.game.times = record.times;
 
     for (const round of record.rounds) {
-      if (!this.game.isRunning()) {
+      if (!this.game.isRunning) {
         throw new Error("遊戲次數已達上限，無法繼續遊玩。");
       }
 
@@ -65,11 +65,10 @@ export class RecordChecker {
       this.game["roundEnd"]();
     }
 
-    if (!this.game.isRunning()) {
+    if (!this.game.isRunning) {
       this.game["gameOver"]();
     }
 
     return this.game.score;
   }
 }
-

@@ -27,4 +27,4 @@ export type Pattern = {
  */
 export type PatternName = (typeof patterns)[number]["name"];
 
-export type ModeName<G extends LaBaG> = LaBaG["modes"][number]["name"];
+export type ModeName<G extends LaBaG> = G["modes"][number]["name"];
