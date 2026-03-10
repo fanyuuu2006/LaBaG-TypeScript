@@ -1,6 +1,6 @@
 ﻿import { Mode } from "./mode";
 import { patterns } from "./pattern";
-import { Pattern, LaBaGEvent, PatternName } from "./types";
+import { Pattern, LaBaGEvent, PatternName, ModeName } from "./types";
 import { randInt } from "./utils/randInt";
 
 /**
@@ -288,6 +288,10 @@ export class LaBaG {
     if (!this.isRunning) {
       this.gameOver();
     }
+  }
+
+  getModes(name: ModeName) {
+    return this.modes.filter((m) => m.name === name);
   }
 
   get isRunning() {
