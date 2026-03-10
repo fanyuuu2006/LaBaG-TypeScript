@@ -47,7 +47,7 @@ export class LaBaG {
     };
 
     this.__defaultMode__ = new Mode({
-      active: false,
+      active: true,
       name: "normal",
       rates: {
         gss: 36,

@@ -30,13 +30,16 @@ export class RecordChecker {
 
     for (const round of record.rounds) {
       if (!this.game.isRunning) {
-        throw new Error("遊戲次數已達上限，無法繼續遊玩。");
+        break;
       }
 
       // 1. 回合開始
-      this.game["roundStart"]();
+      this.game.roundStart();
 
-      // 2. 設定隨機數字與圖案 (模擬 rollSlots)
+      // 2. 觸發 rollSlots 事件，這會執行所有模式的隨機邏輯
+      this.game.rollSlots();
+
+      // 3. 覆蓋隨機數字與圖案 (確保使用紀錄中的數值)
       const { ranges } = this.game.getCurrentConfig();
 
       for (let i = 0; i < 3; i++) {
@@ -47,10 +50,7 @@ export class RecordChecker {
         this.game.patterns[i] = match ? match.pattern : null;
       }
 
-      // 觸發 rollSlots 事件，讓模式執行其邏輯 (例如 greenwei 產生隨機數)
-      this.game["emit"]("rollSlots");
-
-      // 3. 覆蓋模式的隨機變數 (確保使用紀錄中的數值)
+      // 4. 覆蓋模式的隨機變數 (確保使用紀錄中的數值)
       this.game.modes.forEach((mode) => {
         const recordedNum = round.randNums?.[mode.name];
         if (recordedNum !== undefined && mode.variable) {
@@ -58,15 +58,15 @@ export class RecordChecker {
         }
       });
 
-      // 4. 計算分數
-      this.game["calculateScore"]();
+      // 5. 計算分數
+      this.game.calculateScore();
 
-      // 5. 回合結束
-      this.game["roundEnd"]();
+      // 6. 回合結束
+      this.game.roundEnd();
     }
 
     if (!this.game.isRunning) {
-      this.game["gameOver"]();
+      this.game.gameOver();
     }
 
     return this.game.score;

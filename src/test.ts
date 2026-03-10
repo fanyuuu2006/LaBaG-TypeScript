@@ -1,4 +1,5 @@
-import { labag } from "./index";
+import { checker, labag } from "./index";
+import { recorder } from "./index";
 labag.addEventListener("gameStart", (game) => {
   console.log("Game Started!");
   console.log(`Total Rounds: ${game.times}\n`);
@@ -12,7 +13,7 @@ labag.addEventListener("rollSlots", (game) => {
   console.log(
     `Probability Ranges: ${ranges
       .map((r) => `${r.pattern.name}<=${r.threshold}`)
-      .join(", ")}`
+      .join(", ")}`,
   );
 });
 labag.addEventListener("roundEnd", (game) => {
@@ -22,6 +23,8 @@ labag.addEventListener("roundEnd", (game) => {
 });
 
 labag.init();
+recorder.init();
+
 while (labag.isRunning) {
   labag.play();
 }
@@ -32,5 +35,11 @@ console.log(
   `Active Modes at end: ${labag
     .getCurrentConfig()
     .modes.map((m) => m.name)
-    .join(", ")}`
+    .join(", ")}`,
+);
+console.log(`record: ${JSON.stringify(recorder.getRecord(), null, 2)}`);
+console.log(
+  checker.check(recorder.getRecord())
+    ? "Record is valid!"
+    : "Record is invalid!",
 );
