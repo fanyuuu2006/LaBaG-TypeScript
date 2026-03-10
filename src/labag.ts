@@ -290,8 +290,8 @@ export class LaBaG {
     }
   }
 
-  getModes(name: ModeName) {
-    return this.modes.filter((m) => m.name === name);
+  getMode(name: ModeName) {
+    return this.modes.find((m) => m.name === name);
   }
 
   get isRunning() {
