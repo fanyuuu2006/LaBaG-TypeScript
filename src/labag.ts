@@ -1,4 +1,4 @@
-import { Mode } from "./mode";
+﻿import { Mode } from "./mode";
 import { ModeName } from "./modes";
 import { patterns } from "./pattern";
 import { Pattern, LaBaGEvent, PatternName } from "./types";
@@ -9,13 +9,13 @@ import { randInt } from "./utils/randInt";
  */
 export class LaBaG {
   /** 總遊玩次數限制 */
-  times: number;
+  #times: number;
   /** 已遊玩次數 */
   played: number;
   /** 當前進行的輪次 */
-  rounds: number;
+  #rounds: number;
   /** 當前分數 */
-  score: number;
+  #score: number;
   /** 邊際分數 */
   marginScore: number;
   /** 產生的隨機數字 */
@@ -29,13 +29,13 @@ export class LaBaG {
 
   /**
    * 初始化拉霸遊戲。
-   * @param times - 總遊玩次數，預設為 30。
+   * @param #times - 總遊玩次數，預設為 30。
    */
   constructor(times: number = 30) {
-    this.times = times;
+    this.#times = times;
     this.played = 0;
-    this.rounds = 0;
-    this.score = 0;
+    this.#rounds = 0;
+    this.#score = 0;
     this.marginScore = 0;
     this.randNums = [];
     this.patterns = [null, null, null];
@@ -103,7 +103,7 @@ export class LaBaG {
    * @returns 如果遊戲仍在進行中則返回 true，否則返回 false。
    */
   isRunning() {
-    return this.played < this.times;
+    return this.played < this.#times;
   }
 
   /**
@@ -149,11 +149,11 @@ export class LaBaG {
    */
   init() {
     this.played = 0;
-    this.score = 0;
+    this.#score = 0;
     this.marginScore = 0;
     this.randNums = [];
     this.patterns = [null, null, null];
-    this.rounds = 0;
+    this.#rounds = 0;
     this.emit("gameStart");
   }
 
@@ -162,7 +162,7 @@ export class LaBaG {
    */
   private roundStart() {
     this.played += 1;
-    this.rounds += 1;
+    this.#rounds += 1;
     this.marginScore = 0;
     this.emit("roundStart");
   }
@@ -233,7 +233,7 @@ export class LaBaG {
   }
 
   private roundEnd() {
-    this.score += this.marginScore;
+    this.#score += this.marginScore;
     this.emit("roundEnd");
   }
 
@@ -256,5 +256,18 @@ export class LaBaG {
 
   getMode(modeName: ModeName): Mode | undefined {
     return this.modes.find((mode) => mode.name === modeName);
+  }
+
+  
+  get score() {
+    return this.#score;
+  }
+
+  get rounds() {
+    return this.#rounds;
+  }
+
+  get times(){
+    return this.#times;
   }
 }
