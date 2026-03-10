@@ -1,4 +1,5 @@
 import { LaBaG } from "src/labag";
+import { modes } from "src/modes";
 import { patterns } from "src/pattern";
 
 /**
@@ -27,4 +28,4 @@ export type Pattern = {
  */
 export type PatternName = (typeof patterns)[number]["name"];
 
-export type ModeName<G extends LaBaG> = G["modes"][number]["name"];
+export type ModeName = (typeof modes)[number]["name"] | "normal";

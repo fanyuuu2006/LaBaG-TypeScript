@@ -26,7 +26,7 @@ export class LaBaG {
   /** 事件監聽器列表 */
   eventListeners: Record<LaBaGEvent, ((game: LaBaG) => void)[]>;
 
-  __defaultMode__: Mode;
+  __defaultMode__: Mode<{}, "normal">;
 
   constructor(times: number = 30) {
     this.times = times;
