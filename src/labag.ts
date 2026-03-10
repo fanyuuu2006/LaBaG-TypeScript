@@ -19,11 +19,11 @@ export class LaBaG {
   /** 邊際分數 */
   marginScore: number;
   /** 產生的隨機數字 */
-  randNums: number[];
+  #randNums: number[];
   /** 當前轉出的圖案組合 */
-  patterns: [Pattern | null, Pattern | null, Pattern | null];
+  #patterns: [Pattern | null, Pattern | null, Pattern | null];
   /** 遊戲模式列表 */
-  modes: Mode<any>[];
+  #modes: Mode<any>[];
   /** 事件監聽器列表 */
   eventListeners: Record<LaBaGEvent, ((game: LaBaG) => void)[]>;
 
@@ -37,9 +37,9 @@ export class LaBaG {
     this.#rounds = 0;
     this.#score = 0;
     this.marginScore = 0;
-    this.randNums = [];
-    this.patterns = [null, null, null];
-    this.modes = [];
+    this.#randNums = [];
+    this.#patterns = [null, null, null];
+    this.#modes = [];
     this.eventListeners = {
       gameOver: [],
       gameStart: [],
@@ -87,12 +87,12 @@ export class LaBaG {
    * @param mode - 要新增的模式。
    */
   addMode(mode: Mode<any>) {
-    this.modes.push(mode);
+    this.#modes.push(mode);
     // 註冊特定模式的監聽器
     Object.entries(mode.eventListener).forEach(([event, listener]) => {
       if (listener) {
         this.addEventListener(event as LaBaGEvent, (game) =>
-          listener(game, mode)
+          listener(game, mode),
         );
       }
     });
@@ -110,7 +110,7 @@ export class LaBaG {
    * 取得目前遊戲的相關設定
    */
   getCurrentConfig() {
-    const activeModes = this.modes.filter((m) => m.active);
+    const activeModes = this.#modes.filter((m) => m.active);
     if (activeModes.length === 0) {
       throw new Error("目前沒有啟用中的模式，無法轉動拉霸機。");
     }
@@ -126,7 +126,8 @@ export class LaBaG {
     for (let i = 0; i < activeModes.length; i++) {
       const mode = activeModes[i];
       for (const patternName in mode.rates) {
-        combinedRates[patternName as PatternName] += mode.rates[patternName as PatternName];
+        combinedRates[patternName as PatternName] +=
+          mode.rates[patternName as PatternName];
       }
     }
 
@@ -151,8 +152,8 @@ export class LaBaG {
     this.played = 0;
     this.#score = 0;
     this.marginScore = 0;
-    this.randNums = [];
-    this.patterns = [null, null, null];
+    this.#randNums = [];
+    this.#patterns = [null, null, null];
     this.#rounds = 0;
     this.emit("gameStart");
   }
@@ -174,12 +175,12 @@ export class LaBaG {
     const { ranges } = this.getCurrentConfig();
     const rangesAcc =
       ranges.length > 0 ? ranges[ranges.length - 1].threshold : 0;
-    
+
     // 產生 3 個隨機數字並直接尋找對應圖案
     for (let i = 0; i < 3; i++) {
       const num = randInt(1, rangesAcc);
-      this.randNums[i] = num;
-      
+      this.#randNums[i] = num;
+
       let matchedPattern: Pattern | null = null;
       for (let j = 0; j < ranges.length; j++) {
         if (num <= ranges[j].threshold) {
@@ -187,7 +188,7 @@ export class LaBaG {
           break;
         }
       }
-      this.patterns[i] = matchedPattern;
+      this.#patterns[i] = matchedPattern;
     }
 
     this.emit("rollSlots");
@@ -197,7 +198,7 @@ export class LaBaG {
    * 計算分數。
    */
   private calculateScore() {
-    const [p1, p2, p3] = this.patterns;
+    const [p1, p2, p3] = this.#patterns;
     if (!p1 || !p2 || !p3) {
       throw new Error("圖案未正確生成，無法計算分數。");
     }
@@ -255,10 +256,9 @@ export class LaBaG {
   }
 
   getMode(modeName: ModeName): Mode | undefined {
-    return this.modes.find((mode) => mode.name === modeName);
+    return this.#modes.find((mode) => mode.name === modeName);
   }
 
-  
   get score() {
     return this.#score;
   }
@@ -267,7 +267,23 @@ export class LaBaG {
     return this.#rounds;
   }
 
-  get times(){
+  get times() {
     return this.#times;
+  }
+
+  set times(value: number) {
+    this.#times = value;
+  }
+
+  get patterns() {
+    return this.#patterns;
+  }
+
+  get randNums() {
+    return this.#randNums;
+  }
+
+  get modes() {
+    return this.#modes;
   }
 }
