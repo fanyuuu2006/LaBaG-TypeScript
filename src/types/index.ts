@@ -1,3 +1,4 @@
+import { LaBaG } from "src/labag";
 import { patterns } from "src/pattern";
 
 /**
@@ -25,3 +26,5 @@ export type Pattern = {
  * 圖案名稱的型別。
  */
 export type PatternName = (typeof patterns)[number]["name"];
+
+export type ModeName<G extends LaBaG> = LaBaG["modes"][number]["name"];

@@ -23,7 +23,7 @@ export default new Mode({
         (p) => p && p.name === mode.variable.bindPattern.name,
       );
 
-      if (!game.isRunning() && hasBindPattern) {
+      if (!game.isRunning && hasBindPattern) {
         mode.active = true;
         game.played -= mode.variable.bonusRounds;
         mode.variable.times += 1;

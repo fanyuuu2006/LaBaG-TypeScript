@@ -1,9 +1,12 @@
-import { LaBaG } from "./labagV2";
+import { LaBaG } from "./labag";
 import { patterns } from "./pattern";
 import { LaBaGEvent, Pattern, PatternName } from "./types";
-interface ModeConfig<VariableType extends Record<string, any>> {
+interface ModeConfig<
+  VariableType extends Record<string, any>,
+  N extends string = string,
+> {
   active: boolean;
-  name: string;
+  name: N;
   rates: Record<PatternName, number>;
   eventListener?: Partial<
     Record<LaBaGEvent, (game: LaBaG, mode: Mode<VariableType>) => void>
@@ -16,11 +19,12 @@ interface ModeConfig<VariableType extends Record<string, any>> {
  */
 export class Mode<
   VariableType extends Record<string, any> = Record<string, any>,
-> implements ModeConfig<VariableType> {
+  N extends string = string,
+> implements ModeConfig<VariableType, N> {
   /** 模式是否啟用 */
   active: boolean;
   /** 模式名稱 */
-  name: string;
+  name: N;
   /** 各圖案出現的機率 */
   rates: Record<PatternName, number>;
   // 預先計算的區間，用於高效查找
@@ -33,7 +37,6 @@ export class Mode<
   /** 模式專屬的變數儲存空間 */
   variable: VariableType;
   /** 機率總和 */
-
 
   /**
    * 建立一個新的遊戲模式。
@@ -62,9 +65,9 @@ export class Mode<
    * variable: {
    *  myCustomValue: 123,
    * },
-   * });  
+   * });
    */
-  constructor(config: ModeConfig<VariableType>) {
+  constructor(config: ModeConfig<VariableType, N>) {
     const { active, name, rates, eventListener, variable } = config;
     this.active = active;
     this.name = name;

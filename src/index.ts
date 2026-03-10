@@ -1,13 +1,14 @@
 import { LaBaG } from "./labag";
-import { modeList, ModeName } from "./modes";
+import { modes } from "./modes";
 import { LaBaGEvent, Pattern, PatternName } from "./types";
 import { Mode } from "./mode";
 import { patterns } from "./pattern";
-import { Recorder, GameRecord } from './recorder';
+import { Recorder, GameRecord } from "./recorder";
 import { RecordChecker } from "./recordChecker";
+import { ModeName } from './types/index';
 
 const labag = new LaBaG();
-modeList.forEach((mode) => {
+modes.forEach((mode) => {
   labag.addMode(mode);
 });
 const recorder = new Recorder(labag);
@@ -16,7 +17,7 @@ export {
   labag,
   recorder,
   checker,
-  modeList,
+  modes,
   patterns,
   LaBaG,
   Recorder,
@@ -25,6 +26,7 @@ export {
   type LaBaGEvent,
   type Pattern,
   type PatternName,
+  type GameRecord,
   type ModeName,
-  type GameRecord
 };
+
