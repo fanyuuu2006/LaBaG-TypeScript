@@ -5,7 +5,7 @@ import { Mode } from "./mode";
 import { patterns } from "./pattern";
 import { Recorder, GameRecord } from "./recorder";
 import { RecordChecker } from "./recordChecker";
-import { ModeName } from "./types/index";
+import { ModeName } from "./types";
 
 const labag = new LaBaG();
 modes.forEach((mode) => {
