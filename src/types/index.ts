@@ -1,6 +1,5 @@
-import { LaBaG } from "src/labag";
-import { modes } from "src/modes";
-import { patterns } from "src/pattern";
+import { modes } from "../modes";
+import { patterns } from "../pattern";
 
 /**
  * 拉霸遊戲的事件類型。
