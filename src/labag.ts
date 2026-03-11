@@ -22,11 +22,11 @@ export class LaBaG {
   /** 當前轉出的圖案組合 */
   patterns: [Pattern | null, Pattern | null, Pattern | null];
   /** 遊戲模式列表 */
-  modes: Mode<Record<string, any>>[];
+  modes: Mode[];
   /** 事件監聽器列表 */
   eventListeners: Record<LaBaGEvent, ((game: LaBaG) => void)[]>;
 
-  __defaultMode__: Mode<{}, "normal">;
+  __defaultMode__: Mode;
 
   constructor(times: number = 30) {
     this.times = times;
@@ -92,7 +92,7 @@ export class LaBaG {
             game.patterns[i] = matchedPattern;
           }
         },
-        calculateScore: (game) => {
+        calculateScore: (game, mode) => {
           const [p1, p2, p3] = game.patterns;
           if (!p1 || !p2 || !p3) {
             game.marginScore = 0;
@@ -117,18 +117,26 @@ export class LaBaG {
               this.marginScore += p1.scores[1];
               this.marginScore += p2.scores[2];
             }
-            this.marginScore = Math.round(this.marginScore / 1.4);
+            this.marginScore = Math.round(
+              this.marginScore / mode.variable.twoMatchDivisor,
+            );
           } else {
             // 三個圖案皆不同
             this.marginScore += p1.scores[2];
             this.marginScore += p2.scores[2];
             this.marginScore += p3.scores[2];
-            this.marginScore = Math.round(this.marginScore / 3);
+            this.marginScore = Math.round(
+              this.marginScore / mode.variable.allDifferentDivisor,
+            );
           }
         },
         roundEnd: (game) => {
           game.score += game.marginScore;
         },
+      },
+      variable: {
+        twoMatchDivisor: 1.4,
+        allDifferentDivisor: 3,
       },
     });
     this.addMode(this.__defaultMode__);
