@@ -1,26 +1,25 @@
 ﻿import { Pattern, Payout } from "./types";
 import { randInt } from "./utils/randInt";
 
-
 export class LaBaG {
   patterns: Pattern[];
-  reel: Pattern[];
+  reels: Pattern[];
   payouts: Payout[];
 
   constructor(patterns: Pattern[], payouts: Payout[]) {
     this.patterns = patterns;
-    this.reel = [patterns[0], patterns[1], patterns[2]];
+    this.reels = [patterns[0], patterns[1], patterns[2]];
     this.payouts = payouts;
   }
   spin() {
-    this.reel = [
+    this.reels = [
       this.randomPattern(),
       this.randomPattern(),
       this.randomPattern(),
     ];
-    const reward = this.caculateReward(this.reel);
+    const reward = this.caculateReward(this.reels);
     return {
-      reel: this.reel,
+      reels: this.reels,
       reward,
     };
   }
