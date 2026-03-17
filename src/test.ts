@@ -46,18 +46,18 @@ const patterns: Pattern[] = [
 ];
 
 const payouts: Payout[] = [
-  { id: 1, match_count: 2, pattern_id: 1, reward: 59 },
-  { id: 2, match_count: 3, pattern_id: 1, reward: 257 },
-  { id: 3, match_count: 2, pattern_id: 2, reward: 127 },
-  { id: 4, match_count: 3, pattern_id: 2, reward: 613 },
-  { id: 5, match_count: 2, pattern_id: 3, reward: 283 },
-  { id: 6, match_count: 3, pattern_id: 3, reward: 1429 },
-  { id: 7, match_count: 2, pattern_id: 4, reward: 607 },
-  { id: 8, match_count: 3, pattern_id: 4, reward: 3721 },
-  { id: 9, match_count: 2, pattern_id: 5, reward: 2269 },
-  { id: 10, match_count: 3, pattern_id: 5, reward: 12457 },
-  { id: 11, match_count: 2, pattern_id: 6, reward: 19873 },
-  { id: 12, match_count: 3, pattern_id: 6, reward: 193541 },
+  { id: 1, match_count: 2, pattern_id: 1, reward: 56 },
+  { id: 2, match_count: 3, pattern_id: 1, reward: 242 },
+  { id: 3, match_count: 2, pattern_id: 2, reward: 119 },
+  { id: 4, match_count: 3, pattern_id: 2, reward: 578 },
+  { id: 5, match_count: 2, pattern_id: 3, reward: 266 },
+  { id: 6, match_count: 3, pattern_id: 3, reward: 1345 },
+  { id: 7, match_count: 2, pattern_id: 4, reward: 571 },
+  { id: 8, match_count: 3, pattern_id: 4, reward: 3503 },
+  { id: 9, match_count: 2, pattern_id: 5, reward: 2136 },
+  { id: 10, match_count: 3, pattern_id: 5, reward: 11727 },
+  { id: 11, match_count: 2, pattern_id: 6, reward: 18708 },
+  { id: 12, match_count: 3, pattern_id: 6, reward: 182200 },
 ];
 
 // --- 輔助函式 (Helpers) ---
