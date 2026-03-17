@@ -66,7 +66,10 @@ const payouts: Payout[] = [
 格式化數字為貨幣或百分比 (Format numbers as currency or percentage)
 */
 const formatCurrency = (val: number) =>
-  new Intl.NumberFormat("en-US", { style: "decimal", minimumFractionDigits: 0 }).format(val);
+  new Intl.NumberFormat("en-US", {
+    style: "decimal",
+    minimumFractionDigits: 0,
+  }).format(val);
 
 /**
  * 格式化百分比
@@ -80,7 +83,7 @@ const formatPct = (val: number) => `${val.toFixed(4)}%`;
 function calculateTheoreticalStats(
   patterns: Pattern[],
   payouts: Payout[],
-  bet: number
+  bet: number,
 ) {
   const totalWeight = patterns.reduce((sum, p) => sum + p.weight, 0);
   let ev = 0;
@@ -97,16 +100,15 @@ function calculateTheoreticalStats(
     // k=3: p^3
     // k=2: C(3,2) * p^2 * (1-p) = 3 * p^2 * (1-p)
     const prob =
-      payout.match_count === 3
-        ? Math.pow(p, 3)
-        : 3 * Math.pow(p, 2) * (1 - p);
+      payout.match_count === 3 ? Math.pow(p, 3) : 3 * Math.pow(p, 2) * (1 - p);
 
     ev += prob * payout.reward;
     // 假設賠率互斥: E[X^2] = sum(prob * reward^2)
     // Assuming disjoint payouts: E[X^2] = sum(prob * reward^2)
     varianceSum += prob * Math.pow(payout.reward, 2);
 
-    hitProbabilities[payout.reward] = (hitProbabilities[payout.reward] || 0) + prob;
+    hitProbabilities[payout.reward] =
+      (hitProbabilities[payout.reward] || 0) + prob;
   }
 
   const variance = varianceSum - Math.pow(ev, 2);
@@ -123,8 +125,6 @@ function runSimulation(game: LaBaG, count: number) {
   let maxWin = 0;
   const hitFrequency: Record<number, number> = {};
 
-  const startTime = Date.now();
-
   for (let i = 0; i < count; i++) {
     const result = game.spin();
     totalReward += result.reward;
@@ -136,15 +136,11 @@ function runSimulation(game: LaBaG, count: number) {
     }
   }
 
-  const endTime = Date.now();
-  const duration = (endTime - startTime) / 1000;
-
   return {
     totalReward,
     winCount,
     maxWin,
     hitFrequency,
-    duration,
   };
 }
 
@@ -159,7 +155,7 @@ console.log("           理論分析 (Theoretical)          ");
 console.log("==========================================");
 console.log(`理論期望值 (EV) : ${theo.ev.toFixed(2)}`);
 console.log(`理論 RTP        : ${theo.rtp.toFixed(2)}%`);
-console.log(`波動率 (SD)     : ${theo.stdDev.toFixed(2)}`);
+console.log(`標準差 (SD)     : ${theo.stdDev.toFixed(2)}`);
 console.log("------------------------------------------");
 
 // 2. 模擬 (Simulation)
@@ -172,21 +168,24 @@ const simRTP = (simEV / BET_AMOUNT) * 100;
 const simHitRate = (sim.winCount / SIMULATION_COUNT) * 100;
 
 // RTP 的信賴區間 (95% CI): 平均值 +/- 1.96 * (標準差 / sqrt(N))
-// 注意: 使用理論標準差是標準誤差的良好近似
-// Confidence Interval for RTP (95% CI): Mean +/- 1.96 * (SD / sqrt(N))
-// Note: Using theoretical SD is a good approximation for the standard error of the mean
+// 標準誤差 (Standard Error) = 標準差 / sqrt(模擬次數)
 const standardError = theo.stdDev / Math.sqrt(SIMULATION_COUNT);
+// 信賴區間的邊際誤差 (Margin of Error) = 1.96 * 標準誤差
 const marginOfError = 1.96 * standardError;
+// RTP 的誤差百分比 = (邊際誤差 / 投注金額) * 100
 const rtpMargin = (marginOfError / BET_AMOUNT) * 100;
 
 console.log("==========================================");
 console.log("           模擬結果 (Simulation)          ");
 console.log("==========================================");
-console.log(`耗時             : ${sim.duration.toFixed(3)} 秒`);
-console.log(`總投注           : ${formatCurrency(BET_AMOUNT * SIMULATION_COUNT)}`);
+console.log(
+  `總投注           : ${formatCurrency(BET_AMOUNT * SIMULATION_COUNT)}`,
+);
 console.log(`總獎金           : ${formatCurrency(sim.totalReward)}`);
 console.log(`模擬期望值 (EV)   : ${simEV.toFixed(2)}`);
-console.log(`模擬 RTP          : ${simRTP.toFixed(2)}% (95% CI: ±${rtpMargin.toFixed(2)}%)`);
+console.log(
+  `模擬 RTP          : ${simRTP.toFixed(2)}% (95% CI: ±${rtpMargin.toFixed(2)}%)`,
+);
 console.log(`命中率           : ${simHitRate.toFixed(2)}%`);
 console.log(`最大單次獎金      : ${sim.maxWin}`);
 console.log(`誤差 (Sim - Theo) : ${(simRTP - theo.rtp).toFixed(2)}%`);
@@ -203,16 +202,16 @@ const allRewards = Array.from(
   new Set([
     ...Object.keys(theo.hitProbabilities).map(Number),
     ...Object.keys(sim.hitFrequency).map(Number),
-  ])
+  ]),
 ).sort((a, b) => a - b);
 
 for (const reward of allRewards) {
   const theoProb = (theo.hitProbabilities[reward] || 0) * 100;
   const simCount = sim.hitFrequency[reward] || 0;
   const simProb = (simCount / SIMULATION_COUNT) * 100;
-  
+
   console.log(
-    `| ${reward.toString().padEnd(6)} | ${formatPct(theoProb).padEnd(10)} | ${formatPct(simProb).padEnd(10)} | ${simCount.toString().padStart(8)} |`
+    `| ${reward.toString().padEnd(6)} | ${formatPct(theoProb).padEnd(10)} | ${formatPct(simProb).padEnd(10)} | ${simCount.toString().padStart(8)} |`,
   );
 }
 console.log("==========================================");
