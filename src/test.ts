@@ -60,7 +60,7 @@ export const payouts: Payout[] = [
   { id: "9", match_count: 2, pattern_id: "5", multiplier: 8.0 },
   { id: "10", match_count: 3, pattern_id: "5", multiplier: 105.0 },
   { id: "11", match_count: 2, pattern_id: "6", multiplier: 27.5 },
-  { id: "12", match_count: 3, pattern_id: "6", multiplier: 2600.0 },
+  { id: "12", match_count: 3, pattern_id: "6", multiplier: 2607.0 },
 ];
 
 // --- 輔助函式 (Helpers) ---
