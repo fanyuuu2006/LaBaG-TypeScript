@@ -1,12 +1,12 @@
 export type Pattern = {
-  id: string | number;
+  id: string;
   weight: number;
   image: string;
 };
 
 export type Payout = {
-  id: string | number;
+  id: string;
   pattern_id: Pattern["id"];
   match_count: number;
-  reward: number;
+  multiplier: number;
 };

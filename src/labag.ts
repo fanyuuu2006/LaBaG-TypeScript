@@ -11,16 +11,18 @@ export class LaBaG {
     this.reels = [patterns[0], patterns[1], patterns[2]];
     this.payouts = payouts;
   }
-  spin() {
+  spin(bet: number): { reels: Pattern[]; reward: number; multiplier: number } {
     this.reels = [
       this.randomPattern(),
       this.randomPattern(),
       this.randomPattern(),
     ];
-    const reward = this.caculateReward(this.reels);
+    const multiplier = this.calculateMultiplier(this.reels);
+    const reward = bet * multiplier;
     return {
       reels: this.reels,
       reward,
+      multiplier,
     };
   }
 
@@ -40,17 +42,18 @@ export class LaBaG {
     throw new Error("No pattern found");
   }
 
-  caculateReward(reels: Pattern[]): number {
+  calculateMultiplier(reels: Pattern[]): number {
     const patternCounts: { [key: string]: number } = {};
     for (const pattern of reels) {
       patternCounts[pattern.id] = (patternCounts[pattern.id] || 0) + 1;
     }
-    let totalReward = 0;
+
+    let totalMultiplier = 0;
     for (const payout of this.payouts) {
       if (patternCounts[payout.pattern_id] === payout.match_count) {
-        totalReward += payout.reward;
+        totalMultiplier += payout.multiplier;
       }
     }
-    return totalReward;
+    return totalMultiplier;
   }
 }
