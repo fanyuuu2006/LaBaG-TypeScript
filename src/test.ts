@@ -2,62 +2,65 @@ import { LaBaG } from "./labag";
 import { Pattern, Payout } from "./types";
 
 // --- 設定 (Configuration) ---
-const BET_AMOUNT = 200;
-const SIMULATION_COUNT = 1_000_000;
+const BET_AMOUNT = 1000;
+const SIMULATION_COUNT = 1000000;
 
 // --- 資料定義 (Data Definitions) ---
-const patterns: Pattern[] = [
+
+export const patterns: Pattern[] = [
   {
-    id: 1,
+    id: "1",
     weight: 36,
     image:
       "https://fanyu.vercel.app/api/album/item/1mDK1ewfLiV3fAB1HbjvwdSaDTdJdBGG3",
   },
   {
-    id: 2,
+    id: "2",
     weight: 24,
     image:
       "https://fanyu.vercel.app/api/album/item/1oB-uZhPPfjfTtG4CITnb3_E-Ops9JTA0",
   },
+
   {
-    id: 3,
+    id: "3",
     weight: 17,
     image:
       "https://fanyu.vercel.app/api/album/item/1bMJdRB8uerQZfGYINzBI9Vaw32bZljl2",
   },
   {
-    id: 4,
+    id: "4",
     weight: 12,
     image:
       "https://fanyu.vercel.app/api/album/item/1In8LF1wVfLXpPkp57a20zX84QgsAeLQx",
   },
+
   {
-    id: 5,
+    id: "5",
     weight: 8,
     image:
       "https://fanyu.vercel.app/api/album/item/1Zo_PjrXm-4TBrL2cLAeFkEl1el9kTR56",
   },
   {
-    id: 6,
+    id: "6",
     weight: 3,
     image:
       "https://fanyu.vercel.app/api/album/item/19NMnVgcb-9IsknNcfe9TpCyPBIcGnhQU",
   },
 ];
 
-const payouts: Payout[] = [
-  { id: 1, match_count: 2, pattern_id: 1, reward: 56 },
-  { id: 2, match_count: 3, pattern_id: 1, reward: 242 },
-  { id: 3, match_count: 2, pattern_id: 2, reward: 119 },
-  { id: 4, match_count: 3, pattern_id: 2, reward: 578 },
-  { id: 5, match_count: 2, pattern_id: 3, reward: 266 },
-  { id: 6, match_count: 3, pattern_id: 3, reward: 1345 },
-  { id: 7, match_count: 2, pattern_id: 4, reward: 571 },
-  { id: 8, match_count: 3, pattern_id: 4, reward: 3503 },
-  { id: 9, match_count: 2, pattern_id: 5, reward: 2136 },
-  { id: 10, match_count: 3, pattern_id: 5, reward: 11727 },
-  { id: 11, match_count: 2, pattern_id: 6, reward: 18708 },
-  { id: 12, match_count: 3, pattern_id: 6, reward: 182200 },
+export const payouts: Payout[] = [
+  { id: "1", match_count: 2, pattern_id: "1", multiplier: 0.28 },
+  { id: "2", match_count: 3, pattern_id: "1", multiplier: 1.21 },
+  { id: "3", match_count: 2, pattern_id: "2", multiplier: 0.6 },
+  { id: "4", match_count: 3, pattern_id: "2", multiplier: 2.89 },
+  { id: "5", match_count: 2, pattern_id: "3", multiplier: 1.33 },
+  { id: "6", match_count: 3, pattern_id: "3", multiplier: 6.73 },
+  { id: "7", match_count: 2, pattern_id: "4", multiplier: 2.86 },
+  { id: "8", match_count: 3, pattern_id: "4", multiplier: 17.52 },
+  { id: "9", match_count: 2, pattern_id: "5", multiplier: 10.68 },
+  { id: "10", match_count: 3, pattern_id: "5", multiplier: 58.64 },
+  { id: "11", match_count: 2, pattern_id: "6", multiplier: 93.54 },
+  { id: "12", match_count: 3, pattern_id: "6", multiplier: 911.0 },
 ];
 
 // --- 輔助函式 (Helpers) ---
@@ -102,13 +105,14 @@ function calculateTheoreticalStats(
     const prob =
       payout.match_count === 3 ? Math.pow(p, 3) : 3 * Math.pow(p, 2) * (1 - p);
 
-    ev += prob * payout.reward;
+    const reward = Math.floor(payout.multiplier * bet * 1000) / 1000;
+
+    ev += prob * reward;
     // 假設賠率互斥: E[X^2] = sum(prob * reward^2)
     // Assuming disjoint payouts: E[X^2] = sum(prob * reward^2)
-    varianceSum += prob * Math.pow(payout.reward, 2);
+    varianceSum += prob * Math.pow(reward, 2);
 
-    hitProbabilities[payout.reward] =
-      (hitProbabilities[payout.reward] || 0) + prob;
+    hitProbabilities[reward] = (hitProbabilities[reward] || 0) + prob;
   }
 
   const variance = varianceSum - Math.pow(ev, 2);
@@ -126,7 +130,7 @@ function runSimulation(game: LaBaG, count: number) {
   const hitFrequency: Record<number, number> = {};
 
   for (let i = 0; i < count; i++) {
-    const result = game.spin();
+    const result = game.spin(BET_AMOUNT);
     totalReward += result.reward;
 
     if (result.reward > 0) {
