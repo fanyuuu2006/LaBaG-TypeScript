@@ -49,18 +49,18 @@ export const patterns: Pattern[] = [
 ];
 
 export const payouts: Payout[] = [
-  { id: "1", match_count: 2, pattern_id: "1", multiplier: 0.335 },
-  { id: "2", match_count: 3, pattern_id: "1", multiplier: 1.79 },
-  { id: "3", match_count: 2, pattern_id: "2", multiplier: 0.635 },
-  { id: "4", match_count: 3, pattern_id: "2", multiplier: 6.05 },
-  { id: "5", match_count: 2, pattern_id: "3", multiplier: 1.16 },
-  { id: "6", match_count: 3, pattern_id: "3", multiplier: 17.0 },
-  { id: "7", match_count: 2, pattern_id: "4", multiplier: 2.2 },
-  { id: "8", match_count: 3, pattern_id: "4", multiplier: 48.5 },
-  { id: "9", match_count: 2, pattern_id: "5", multiplier: 4.75 },
-  { id: "10", match_count: 3, pattern_id: "5", multiplier: 160.0 },
-  { id: "11", match_count: 2, pattern_id: "6", multiplier: 31.5 },
-  { id: "12", match_count: 3, pattern_id: "6", multiplier: 3086.0 },
+  { id: "1", match_count: 2, pattern_id: "1", multiplier: 0.56 },
+  { id: "2", match_count: 3, pattern_id: "1", multiplier: 2.5 },
+  { id: "3", match_count: 2, pattern_id: "2", multiplier: 1.05 },
+  { id: "4", match_count: 3, pattern_id: "2", multiplier: 10.0 },
+  { id: "5", match_count: 2, pattern_id: "3", multiplier: 1.3 },
+  { id: "6", match_count: 3, pattern_id: "3", multiplier: 20.0 },
+  { id: "7", match_count: 2, pattern_id: "4", multiplier: 2.1 },
+  { id: "8", match_count: 3, pattern_id: "4", multiplier: 45.0 },
+  { id: "9", match_count: 2, pattern_id: "5", multiplier: 2.6 },
+  { id: "10", match_count: 3, pattern_id: "5", multiplier: 75.0 },
+  { id: "11", match_count: 2, pattern_id: "6", multiplier: 7.0 },
+  { id: "12", match_count: 3, pattern_id: "6", multiplier: 600.0 },
 ];
 
 // --- 輔助函式 (Helpers) ---

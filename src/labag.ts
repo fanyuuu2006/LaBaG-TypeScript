@@ -18,7 +18,7 @@ export class LaBaG {
       this.randomPattern(),
     ];
     const multiplier = this.calculateMultiplier(this.reels);
-    const reward = Math.floor(bet * multiplier * 1000) / 1000;
+    const reward = Math.floor(bet * multiplier);
     return {
       reels: this.reels,
       reward,
