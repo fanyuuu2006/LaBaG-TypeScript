@@ -2,7 +2,7 @@ import { LaBaG } from "./labag";
 import { Pattern, Payout } from "./types";
 
 // --- 設定 (Configuration) ---
-const BET_AMOUNT = 1000;
+const BET_AMOUNT = 100;
 const SIMULATION_COUNT = 1000000;
 
 // --- 資料定義 (Data Definitions) ---
@@ -92,7 +92,7 @@ function calculateTheoreticalStats(
   let ev = 0;
   let varianceSum = 0; // E[X^2]
   const hitProbabilities: Record<number, number> = {};
-  
+
   const payoutStats: {
     id: string;
     patternId: string;
@@ -114,8 +114,8 @@ function calculateTheoreticalStats(
     const prob =
       payout.match_count === 3 ? Math.pow(p, 3) : 3 * Math.pow(p, 2) * (1 - p);
 
-    const reward = Math.floor(payout.multiplier * bet * 1000) / 1000;
-    const rtpContribution = (prob * reward / bet) * 100; // RTP 貢獻 = (概率 * 獎金 / 投注) * 100
+    const reward = Math.floor(payout.multiplier * bet);
+    const rtpContribution = ((prob * reward) / bet) * 100; // RTP 貢獻 = (概率 * 獎金 / 投注) * 100
 
     ev += prob * reward;
     // 假設賠率互斥: E[X^2] = sum(prob * reward^2)
@@ -184,12 +184,8 @@ console.log("------------------------------------------");
 console.log("\n==========================================");
 console.log("           RTP 貢獻分析 (RTP Contribution) ");
 console.log("==========================================");
-console.log(
-  `| ID | Pattern | Count | Reward | Prob (%) | RTP Contrib (%) |`,
-);
-console.log(
-  `|----|---------|-------|--------|----------|-----------------|`,
-);
+console.log(`| ID | Pattern | Count | Reward | Prob (%) | RTP Contrib (%) |`);
+console.log(`|----|---------|-------|--------|----------|-----------------|`);
 
 theo.payoutStats.forEach((stat) => {
   console.log(
