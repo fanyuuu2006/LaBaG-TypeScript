@@ -187,11 +187,18 @@ console.log("==========================================");
 console.log(`| ID | Pattern | Count | Reward | Prob (%) | RTP Contrib (%) |`);
 console.log(`|----|---------|-------|--------|----------|-----------------|`);
 
-theo.payoutStats.forEach((stat) => {
-  console.log(
-    `| ${stat.id.padEnd(2)} | ${stat.patternId.padEnd(7)} | ${stat.matchCount}     | ${stat.reward.toString().padEnd(6)} | ${(stat.prob * 100).toFixed(4).padEnd(8)} | ${stat.rtpContribution.toFixed(4).padEnd(15)} |`,
-  );
-});
+theo.payoutStats
+  .sort((a, b) => {
+    // 按出現機率排序
+    if (b.prob !== a.prob) return b.prob - a.prob;
+    // 機率相同則按
+    return b.patternId.localeCompare(a.patternId);
+  })
+  .forEach((stat) => {
+    console.log(
+      `| ${stat.id.padEnd(2)} | ${stat.patternId.padEnd(7)} | ${stat.matchCount}     | ${stat.reward.toString().padEnd(6)} | ${(stat.prob * 100).toFixed(4).padEnd(8)} | ${stat.rtpContribution.toFixed(4).padEnd(15)} |`,
+    );
+  });
 console.log("------------------------------------------");
 console.log(`總 RTP: ${theo.rtp.toFixed(2)}%`);
 
