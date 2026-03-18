@@ -92,6 +92,15 @@ function calculateTheoreticalStats(
   let ev = 0;
   let varianceSum = 0; // E[X^2]
   const hitProbabilities: Record<number, number> = {};
+  
+  const payoutStats: {
+    id: string;
+    patternId: string;
+    matchCount: number;
+    prob: number;
+    reward: number;
+    rtpContribution: number;
+  }[] = [];
 
   for (const payout of payouts) {
     const pattern = patterns.find((p) => p.id === payout.pattern_id);
@@ -106,6 +115,7 @@ function calculateTheoreticalStats(
       payout.match_count === 3 ? Math.pow(p, 3) : 3 * Math.pow(p, 2) * (1 - p);
 
     const reward = Math.floor(payout.multiplier * bet * 1000) / 1000;
+    const rtpContribution = (prob * reward / bet) * 100; // RTP 貢獻 = (概率 * 獎金 / 投注) * 100
 
     ev += prob * reward;
     // 假設賠率互斥: E[X^2] = sum(prob * reward^2)
@@ -113,13 +123,22 @@ function calculateTheoreticalStats(
     varianceSum += prob * Math.pow(reward, 2);
 
     hitProbabilities[reward] = (hitProbabilities[reward] || 0) + prob;
+
+    payoutStats.push({
+      id: payout.id,
+      patternId: payout.pattern_id,
+      matchCount: payout.match_count,
+      prob,
+      reward,
+      rtpContribution,
+    });
   }
 
   const variance = varianceSum - Math.pow(ev, 2);
   const stdDev = Math.sqrt(variance);
   const rtp = (ev / bet) * 100;
 
-  return { ev, rtp, stdDev, hitProbabilities };
+  return { ev, rtp, stdDev, hitProbabilities, payoutStats };
 }
 
 // --- 模擬邏輯 (Simulation Logic) ---
@@ -161,6 +180,24 @@ console.log(`理論期望值 (EV) : ${theo.ev.toFixed(2)}`);
 console.log(`理論 RTP        : ${theo.rtp.toFixed(2)}%`);
 console.log(`標準差 (SD)     : ${theo.stdDev.toFixed(2)}`);
 console.log("------------------------------------------");
+
+console.log("\n==========================================");
+console.log("           RTP 貢獻分析 (RTP Contribution) ");
+console.log("==========================================");
+console.log(
+  `| ID | Pattern | Count | Reward | Prob (%) | RTP Contrib (%) |`,
+);
+console.log(
+  `|----|---------|-------|--------|----------|-----------------|`,
+);
+
+theo.payoutStats.forEach((stat) => {
+  console.log(
+    `| ${stat.id.padEnd(2)} | ${stat.patternId.padEnd(7)} | ${stat.matchCount}     | ${stat.reward.toString().padEnd(6)} | ${(stat.prob * 100).toFixed(4).padEnd(8)} | ${stat.rtpContribution.toFixed(4).padEnd(15)} |`,
+  );
+});
+console.log("------------------------------------------");
+console.log(`總 RTP: ${theo.rtp.toFixed(2)}%`);
 
 // 2. 模擬 (Simulation)
 console.log(`\n正在執行模擬 (n=${formatCurrency(SIMULATION_COUNT)})...`);
